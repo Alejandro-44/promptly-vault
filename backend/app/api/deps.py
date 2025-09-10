@@ -1,50 +1,57 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
+from bson import ObjectId
+import jwt
+
 from app.core.security import decode_access_token
 from app.core.db import users_collection
-from bson import ObjectId
-import jwt  # librería PyJWT
+from app.schemas.user_schema import UserOut
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = decode_access_token(token)
-        user_id: str = payload.get("sub")
+async def get_current_user(
+    request: Request, 
+    token: str = Depends(oauth2_scheme)  # sigue aceptando Bearer Token
+):
+    # Si no hay header Authorization, buscamos en cookies
+    if not token:
+        token = request.cookies.get("access_token")
 
-        if user_id is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token inválido",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-
-        user = await users_collection.find_one({"_id": ObjectId(user_id)})
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Usuario no encontrado",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-
-        return {
-            "id": str(user["_id"]),
-            "username": user["username"],
-            "email": user["email"],
-            "is_active": user["is_active"],
-        }
-
-    except jwt.ExpiredSignatureError:
+    if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="El token ha expirado",
+            detail="Token no encontrado",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    except jwt.InvalidTokenError:
+    payload = decode_access_token(token)
+    user_id: str = payload.get("sub")
+
+    if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario no encontrado",
+        )
+
+    if not user.get("is_active", True):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Usuario inactivo",
+        )
+    
+    return UserOut(
+        id=str(user["_id"]),
+        email=user["email"],
+        username=user["username"],
+        is_active=user.get("is_active", True),
+    )

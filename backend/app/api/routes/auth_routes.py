@@ -1,9 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
+from bson import ObjectId
+
 from app.core.db import users_collection
 from app.schemas.user_schema import UserCreate, UserLogin, UserOut, Token
 from app.core.security import hash_password, verify_password, create_access_token
-from bson import ObjectId
+from app.api.deps import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -32,7 +34,7 @@ async def register(user: UserCreate):
 
 # --- Login con form-data (OAuth2 estándar) ---
 @router.post("/login", response_model=Token, summary="Login con form-data (OAuth2)")
-async def login_with_form(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_oauth(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
     # Aquí OAuth2PasswordRequestForm entrega "username"
     db_user = await users_collection.find_one({"email": form_data.username})
     if not db_user or not verify_password(form_data.password, db_user["hashed_password"]):
@@ -42,4 +44,27 @@ async def login_with_form(form_data: OAuth2PasswordRequestForm = Depends()):
         )
 
     token = create_access_token({"sub": str(db_user["_id"])})
+    
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        secure=True,      # Solo HTTPS en producción
+        samesite="strict" # evita CSRF básico
+    )
+
+    token = create_access_token({"sub": str(db_user["_id"])})
     return Token(access_token=token)
+
+@router.post("/logout", summary="Cerrar sesión", status_code=status.HTTP_204_NO_CONTENT)
+async def logout(response: Response, current_user=Depends(get_current_user)):
+    """
+    Invalida la sesión borrando la cookie access_token.
+    """
+    response.delete_cookie(
+        key="access_token",
+        httponly=True,
+        secure=True,   
+        samesite="strict"
+    )
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
