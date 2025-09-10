@@ -1,6 +1,4 @@
-from pymongo import AsyncMongoClient
-from app.core.config import settings
+from fastapi import Request
 
-client = AsyncMongoClient(settings.MONGO_URI)
-db = client[settings.MONGO_DB]
-users_collection = db["users"]
+def get_database(request: Request):
+    return request.app.state.database
