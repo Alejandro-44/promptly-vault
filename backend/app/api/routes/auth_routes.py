@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi.security import OAuth2PasswordRequestForm
 from app.core.db import users_collection
 from app.schemas.user_schema import UserCreate, UserLogin, UserOut, Token
 from app.core.security import hash_password, verify_password, create_access_token
@@ -29,11 +30,16 @@ async def register(user: UserCreate):
     )
 
 
-@router.post("/login", response_model=Token)
-async def login(user: UserLogin):
-    db_user = await users_collection.find_one({"email": user.email})
-    if not db_user or not verify_password(user.password, db_user["hashed_password"]):
-        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+# --- Login con form-data (OAuth2 estándar) ---
+@router.post("/login", response_model=Token, summary="Login con form-data (OAuth2)")
+async def login_with_form(form_data: OAuth2PasswordRequestForm = Depends()):
+    # Aquí OAuth2PasswordRequestForm entrega "username"
+    db_user = await users_collection.find_one({"email": form_data.username})
+    if not db_user or not verify_password(form_data.password, db_user["hashed_password"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Credenciales inválidas",
+        )
 
     token = create_access_token({"sub": str(db_user["_id"])})
     return Token(access_token=token)
