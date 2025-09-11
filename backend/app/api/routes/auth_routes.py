@@ -8,11 +8,20 @@ from app.api.dependencies import UserDependency, RepositoriesDependency
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
-@router.post("/register", response_model=UserOut)
+@router.post("/register", response_model=UserOut, summary="Create new user", status_code=status.HTTP_201_CREATED, )
 async def register(user: UserCreate, repos: RepositoriesDependency):
+    """
+    Create a new user
+
+    It expects a JSON with:
+    - username: str
+    - email: str
+    - password: str
+
+    """
     existing = await repos.users.get_user_by_email(user.email)
     if existing:
-        raise HTTPException(status_code=400, detail="Email ya registrado")
+        raise HTTPException(status_code=400, detail="Email already registered")
 
     new_user = {
         "username": user.username,
@@ -20,26 +29,28 @@ async def register(user: UserCreate, repos: RepositoriesDependency):
         "hashed_password": hash_password(user.password),
         "is_active": True,
     }
-    result = await repos.users.create_user(new_user)
 
-    return UserOut(
-        id=str(result.inserted_id),
-        username=user.username,
-        email=user.email,
-        is_active=True,
-    )
+    await repos.users.create_user(new_user)
 
 
-# --- Login con form-data (OAuth2 estándar) ---
-@router.post("/login", response_model=Token, summary="Login con form-data (OAuth2)")
+@router.post("/login", response_model=Token, summary="Login with form-data (OAuth2)")
 async def login_oauth(
     response: Response,
     repos: RepositoriesDependency,
     form_data: OAuth2PasswordRequestForm = Depends()
     ):
-    # Aquí OAuth2PasswordRequestForm entrega "username"
+    """
+    Login with OAuth2 a user and create a cookie with a JWT token
+    """
     db_user = await repos.users.get_user_by_email(form_data.username)
-    if not db_user or not verify_password(form_data.password, db_user["hashed_password"]):
+
+    if not db_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Email no registrado",
+        )
+
+    if not verify_password(form_data.password, db_user["hashed_password"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales inválidas",
@@ -58,8 +69,11 @@ async def login_oauth(
     token = create_access_token({"sub": str(db_user["_id"])})
     return Token(access_token=token)
 
-@router.post("/logout", summary="Cerrar sesión", status_code=status.HTTP_204_NO_CONTENT)
+@router.post("/logout", summary="Logout", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(response: Response, current_user: UserDependency):
+    """
+    Logout a user by deleting the JWT cookie
+    """
     response.delete_cookie(
         key="access_token",
         httponly=True,
