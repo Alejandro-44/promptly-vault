@@ -3,14 +3,14 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.schemas.user_schema import UserCreate, UserOut, Token
 from app.core.security import hash_password, verify_password, create_access_token
-from app.api.deps import UserDependency, UserRepositoryDependency
+from app.api.dependencies import UserDependency, RepositoriesDependency
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/register", response_model=UserOut)
-async def register(user: UserCreate, repo: UserRepositoryDependency):
-    existing = await repo.get_user_by_email(user.email)
+async def register(user: UserCreate, repos: RepositoriesDependency):
+    existing = await repos.users.get_user_by_email(user.email)
     if existing:
         raise HTTPException(status_code=400, detail="Email ya registrado")
 
@@ -20,7 +20,7 @@ async def register(user: UserCreate, repo: UserRepositoryDependency):
         "hashed_password": hash_password(user.password),
         "is_active": True,
     }
-    result = await repo.create_user(new_user)
+    result = await repos.users.create_user(new_user)
 
     return UserOut(
         id=str(result.inserted_id),
@@ -34,11 +34,11 @@ async def register(user: UserCreate, repo: UserRepositoryDependency):
 @router.post("/login", response_model=Token, summary="Login con form-data (OAuth2)")
 async def login_oauth(
     response: Response,
-    repo: UserRepositoryDependency,
+    repos: RepositoriesDependency,
     form_data: OAuth2PasswordRequestForm = Depends()
     ):
     # Aquí OAuth2PasswordRequestForm entrega "username"
-    db_user = await repo.get_user_by_email(form_data.username)
+    db_user = await repos.users.get_user_by_email(form_data.username)
     if not db_user or not verify_password(form_data.password, db_user["hashed_password"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

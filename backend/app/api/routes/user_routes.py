@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.deps import UserDependency
+from app.api.dependencies import UserDependency
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

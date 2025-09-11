@@ -1,7 +1,7 @@
 from typing import Optional
 from bson import ObjectId
 
-from app.core.db import get_database
+from backend.app.models.user import User
 
 class UserRepository:
     COLLECTION_NAME = "users"
@@ -9,14 +9,14 @@ class UserRepository:
     def __init__(self, database):
         self.collection = database[self.COLLECTION_NAME]
 
-    async def create_user(self, user_data: dict) -> str:
+    async def create_user(self, user_data: User) -> str:
         result = await self.collection.insert_one(user_data)
         return str(result.inserted_id)
 
-    async def get_user(self, user_id: str) -> Optional[dict]:
+    async def get_user(self, user_id: str) -> Optional[User]:
         return await self.collection.find_one({"_id": ObjectId(user_id)})
     
-    async def get_user_by_email(self, email: str) -> Optional[dict]:
+    async def get_user_by_email(self, email: str) -> Optional[User]:
         return await self.collection.find_one({"email": email})
 
     async def update_user(self, user_id: str, update_data: dict) -> bool:
