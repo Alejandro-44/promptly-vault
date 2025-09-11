@@ -1,7 +1,7 @@
 from typing import Optional
 from bson import ObjectId
 
-from backend.app.models.user import User
+from app.models.user import User
 
 class UserRepository:
     COLLECTION_NAME = "users"
