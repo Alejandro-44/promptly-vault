@@ -1,6 +1,5 @@
-from typing import Optional, List
+from typing import Optional
 from bson import ObjectId
-from fastapi import Depends
 
 from app.core.db import get_database
 
@@ -28,6 +27,3 @@ class UserRepository:
         return result.modified_count > 0
 
 
-# Dependencia que construye un servicio a partir de la DB
-def get_user_repository(db=Depends(get_database)):
-    return UserRepository(db)

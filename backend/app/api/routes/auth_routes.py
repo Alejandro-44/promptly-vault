@@ -3,14 +3,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.schemas.user_schema import UserCreate, UserOut, Token
 from app.core.security import hash_password, verify_password, create_access_token
-from app.api.deps import get_current_user
-from app.repositories.user_repository import UserRepository, get_user_repository
+from app.api.deps import UserDependency, UserRepositoryDependency
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/register", response_model=UserOut)
-async def register(user: UserCreate, repo: UserRepository = Depends(get_user_repository)):
+async def register(user: UserCreate, repo: UserRepositoryDependency):
     existing = await repo.get_user_by_email(user.email)
     if existing:
         raise HTTPException(status_code=400, detail="Email ya registrado")
@@ -35,7 +34,7 @@ async def register(user: UserCreate, repo: UserRepository = Depends(get_user_rep
 @router.post("/login", response_model=Token, summary="Login con form-data (OAuth2)")
 async def login_oauth(
     response: Response,
-    repo: UserRepository = Depends(get_user_repository),
+    repo: UserRepositoryDependency,
     form_data: OAuth2PasswordRequestForm = Depends()
     ):
     # Aquí OAuth2PasswordRequestForm entrega "username"
@@ -60,10 +59,7 @@ async def login_oauth(
     return Token(access_token=token)
 
 @router.post("/logout", summary="Cerrar sesión", status_code=status.HTTP_204_NO_CONTENT)
-async def logout(response: Response, current_user=Depends(get_current_user)):
-    """
-    Invalida la sesión borrando la cookie access_token.
-    """
+async def logout(response: Response, current_user: UserDependency):
     response.delete_cookie(
         key="access_token",
         httponly=True,

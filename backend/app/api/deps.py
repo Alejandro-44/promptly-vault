@@ -1,18 +1,26 @@
+from typing import Annotated
+
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 
 from app.core.security import decode_access_token
 from app.schemas.user_schema import UserOut
-from app.repositories.user_repository import UserRepository, get_user_repository
+from app.repositories.user_repository import UserRepository
+from app.core.db import get_database
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+OAuth2Dependency = Annotated[str, Depends(oauth2_scheme)]
 
+def get_user_repository(db=Depends(get_database)):
+    return UserRepository(db)
+
+UserRepositoryDependency = Annotated[UserRepository, Depends(get_user_repository)]
 
 async def get_current_user(
     request: Request,
-    repo: UserRepository = Depends(get_user_repository),
-    token: str = Depends(oauth2_scheme)  # sigue aceptando Bearer Token
+    repo: UserRepositoryDependency,
+    token: OAuth2Dependency
 ):
     # Si no hay header Authorization, buscamos en cookies
     if not token:
@@ -35,7 +43,7 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = await repo.get_user_by_id(user_id)
+    user = await repo.get_user(user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -54,3 +62,6 @@ async def get_current_user(
         username=user["username"],
         is_active=user.get("is_active", True),
     )
+
+
+UserDependency = Annotated[UserOut, Depends(get_current_user)]

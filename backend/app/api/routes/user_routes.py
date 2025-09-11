@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
-from app.api.deps import get_current_user
+from fastapi import APIRouter
+from app.api.deps import UserDependency
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get("/me")
-async def get_me(current_user: dict = Depends(get_current_user)):
+async def get_me(current_user: UserDependency):
     return {"user": current_user}
