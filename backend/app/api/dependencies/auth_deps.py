@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 from app.api.dependencies import RepositoriesDependency
 from app.core.security import decode_access_token
-from app.schemas.user_schema import UserOut
+from app.schemas.user_schema import User
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -51,7 +51,7 @@ async def get_current_user(
             detail="Usuario inactivo",
         )
     
-    return UserOut(
+    return User(
         id=str(user["_id"]),
         email=user["email"],
         username=user["username"],
@@ -59,4 +59,4 @@ async def get_current_user(
     )
 
 
-UserDependency = Annotated[UserOut, Depends(get_current_user)]
+UserDependency = Annotated[User, Depends(get_current_user)]

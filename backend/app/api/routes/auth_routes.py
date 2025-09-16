@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.schemas.user_schema import UserCreate, UserOut, Token
+from app.schemas.user_schema import UserCreate, User, Token
 from app.core.security import hash_password, verify_password, create_access_token
 from app.api.dependencies import UserDependency, RepositoriesDependency
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
-@router.post("/register", response_model=UserOut, summary="Create new user", status_code=status.HTTP_201_CREATED, )
+@router.post("/register", response_model=User, summary="Create new user", status_code=status.HTTP_201_CREATED, )
 async def register(user: UserCreate, repos: RepositoriesDependency):
     """
     Create a new user
