@@ -4,7 +4,7 @@ def document_to_prompt(document) -> Prompt:
     return Prompt(
         id=str(document["_id"]),
         title=document["title"],
-        prompt=document["text"],
+        prompt=document["prompt"],
         result_example=document["result_example"],
         model=document["model"],
         tags=document.get("tags", []),
