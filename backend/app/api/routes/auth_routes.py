@@ -69,6 +69,7 @@ async def login_oauth(
     token = create_access_token({"sub": str(db_user["_id"])})
     return Token(access_token=token)
 
+
 @router.post("/logout", summary="Logout", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(response: Response, current_user: UserDependency):
     """
@@ -81,6 +82,7 @@ async def logout(response: Response, current_user: UserDependency):
         samesite="strict"
     )
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
 
 @router.post("/change-password", summary="Change password", status_code=status.HTTP_204_NO_CONTENT)
 async def change_password(

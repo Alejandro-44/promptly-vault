@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, status, HTTPException
 
 from app.api.dependencies import RepositoriesDependency, UserDependency
@@ -8,9 +6,19 @@ from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate
 router = APIRouter(prefix="/prompts", tags=["Prompts"])
 
 
-@router.get("/", response_model=List[Prompt], status_code=status.HTTP_200_OK)
+@router.get("/", response_model=list[Prompt], status_code=status.HTTP_200_OK)
 async def get_prompts(repos: RepositoriesDependency):
     return await repos.prompts.get();
+
+
+@router.get("/{prompt_id}", response_model=Prompt, status_code=status.HTTP_200_OK)
+async def get_prompt(prompt_id: str, repos: RepositoriesDependency):
+    prompt = await repos.prompts.get_by_id(prompt_id)
+
+    if not prompt:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Prompt not found")
+    
+    return prompt
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -52,3 +60,5 @@ async def delete_prompt(prompt_id: str, user: UserDependency, repos: Repositorie
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No authorized to delete")
     
     await repos.prompts.delete(prompt_id)
+
+
