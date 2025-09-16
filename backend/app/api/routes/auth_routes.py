@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.schemas.user_schema import UserCreate, User, Token
+from app.schemas.user_schema import UserCreate, User, Token, UpdatePassword
 from app.core.security import hash_password, verify_password, create_access_token
 from app.api.dependencies import UserDependency, RepositoriesDependency
 
@@ -81,3 +81,23 @@ async def logout(response: Response, current_user: UserDependency):
         samesite="strict"
     )
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@router.post("/change-password", summary="Change password", status_code=status.HTTP_204_NO_CONTENT)
+async def change_password(
+    request: UpdatePassword,
+    user: UserDependency,
+    repos: RepositoriesDependency
+    ):
+    """
+    Change the password of the current user
+    """
+    db_user = await repos.users.get_user(user.id)
+    if not verify_password(request.old_password, db_user["hashed_password"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="password is incorrect",
+        )
+    
+    new_hashed_password = hash_password(request.new_password)
+
+    await repos.users.update_user(user.id, {"hashed_password": new_hashed_password})

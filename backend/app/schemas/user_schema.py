@@ -19,6 +19,11 @@ class User(BaseModel):
     is_active: bool
 
 
+class UpdatePassword(BaseModel):
+    old_password: str
+    new_password: str
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
