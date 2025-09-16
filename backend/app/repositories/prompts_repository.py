@@ -4,7 +4,7 @@ from pymongo.collection import Collection
 from bson.objectid import ObjectId
 
 from app.schemas.prompt_schema import Prompt, PromptCreate
-from helpers.prompt_parser import document_to_prompt
+from app.helpers.prompt_parser import document_to_prompt
 
 class PromptsRepository:
     COLLECTION_NAME = "prompts"

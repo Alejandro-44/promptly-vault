@@ -4,7 +4,7 @@ from pymongo.collection import Collection
 from bson.objectid import ObjectId
 
 from app.schemas.comment_schema import Comment
-from helpers.comment_parser import document_to_prompt
+from app.helpers.comment_parser import document_to_prompt
 
 class CommentsRepository:
     COLLECTION_NAME = "comments"
