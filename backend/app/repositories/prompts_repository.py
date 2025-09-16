@@ -1,9 +1,10 @@
 from typing import List
+from datetime import datetime
 
 from pymongo.collection import Collection
 from bson.objectid import ObjectId
 
-from app.schemas.prompt_schema import Prompt
+from app.schemas.prompt_schema import Prompt, PromptCreate
 from helpers.prompt_parser import document_to_prompt
 
 class PromptsRepository:
@@ -24,7 +25,11 @@ class PromptsRepository:
         object_id = ObjectId(id)
         return await self.collection.find_one({ "_id": object_id })
     
-    async def create(self, prompt_data):
+    async def create(self, prompt_data: dict, user_id: str):
+        prompt_data.update({
+            "creation_date": datetime.now(),
+            "user_id": ObjectId(user_id)
+        })
         result = await self.collection.insert_one(prompt_data)
         return str(result.inserted_id)
 
