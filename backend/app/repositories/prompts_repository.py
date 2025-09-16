@@ -13,9 +13,9 @@ class PromptsRepository:
     def __init__(self, database):
         self.collection: Collection[Prompt] = database[self.COLLECTION_NAME]
 
-    async def get(self) -> list[Prompt]:
+    async def get(self, filters: dict) -> list[Prompt]:
         prompts = []
-        prompts_response = await self.collection.find().to_list()
+        prompts_response = await self.collection.find(filters).to_list()
         for document in prompts_response:
             prompt = document_to_prompt(document)
             prompts.append(prompt)
