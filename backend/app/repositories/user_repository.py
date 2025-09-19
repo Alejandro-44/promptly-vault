@@ -14,6 +14,12 @@ class UserRepository:
     
     async def get_one_by(self, parameter: dict) -> Optional[User]:
         return await self.collection.find_one(parameter)
+    
+    async def get_by_email(self, email: str) -> Optional[User]:
+        return await self.collection.find_one({ "email": email })
+    
+    async def get_by_id(self, user_id: str) -> Optional[User]:
+        return await self.collection.find_one({ "_id": ObjectId(user_id) })
 
     async def update(self, user_id: str, update_data: dict) -> bool:
         result = await self.collection.update_one(
