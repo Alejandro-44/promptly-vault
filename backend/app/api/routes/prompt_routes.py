@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, HTTPException
 
-from app.api.dependencies import RepositoriesDependency, UserDependency
+from app.dependencies import RepositoriesDependency, UserDependency
 from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate
 from app.schemas.comment_schema import Comment, CommentCreate
 
