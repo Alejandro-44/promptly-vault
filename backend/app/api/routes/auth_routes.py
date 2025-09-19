@@ -8,7 +8,7 @@ from app.api.dependencies import UserDependency, RepositoriesDependency
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
-@router.post("/register", response_model=User, summary="Create new user", status_code=status.HTTP_201_CREATED, )
+@router.post("/register", response_model=User, summary="Create new user", status_code=status.HTTP_201_CREATED)
 async def register(user: UserCreate, repos: RepositoriesDependency):
     """
     Create a new user

@@ -4,10 +4,8 @@ from bson.objectid import ObjectId
 from app.schemas.user_schema import User
 
 class UserRepository:
-    COLLECTION_NAME = "users"
-
     def __init__(self, database):
-        self.collection = database[self.COLLECTION_NAME]
+        self.collection = database["users"]
 
     async def create_user(self, user_data: User) -> str:
         result = await self.collection.insert_one(user_data)
