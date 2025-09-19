@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from bson import ObjectId
 
-from app.api.dependencies import UserDependency, RepositoriesDependency
+from app.dependencies import UserDependency, RepositoriesDependency
 from app.schemas.prompt_schema import Prompt
 from app.schemas.user_schema import User
 

@@ -11,10 +11,10 @@ class UserService:
         self.repo = repo
     
     async def get_by_email(self, email: str):
-        return await self.repo.get_one_by({"email": email})
+        return await self.repo.get_by_email(email)
 
     async def get_by_id(self, id: str):
-        return await self.repo.get_one_by({ "_id": ObjectId(id) })
+        return await self.repo.get_by_id(id)
 
     async def register_user(self, user_in: UserCreate) -> User | HTTPException:
         existing = await self.get_by_email(user_in.email)
