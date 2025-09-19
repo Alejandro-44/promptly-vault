@@ -1,4 +1,7 @@
+from typing import Optional
 from fastapi import HTTPException
+from bson import ObjectId
+
 from app.schemas.user_schema import UserCreate, User
 from app.core.security import hash_password
 from app.repositories.user_repository import UserRepository
@@ -6,9 +9,15 @@ from app.repositories.user_repository import UserRepository
 class UserService:
     def __init__(self, repo: UserRepository):
         self.repo = repo
+    
+    async def get_by_email(self, email: str):
+        return await self.repo.get_one_by({"email": email})
 
-    async def register_user(self, user_in: UserCreate) -> User:
-        existing = await self.repo.get_user_by_email(user_in.email)
+    async def get_by_id(self, id: str):
+        return await self.repo.get_one_by({ "_id": ObjectId(id) })
+
+    async def register_user(self, user_in: UserCreate) -> User | HTTPException:
+        existing = await self.get_by_email(user_in.email)
         if existing:
             raise HTTPException(status_code=400, detail="Email already registered")
 
@@ -19,14 +28,12 @@ class UserService:
             "is_active": True,
         }
 
-        created = await self.repo.create_user(new_user)
+        await self.repo.create(new_user)
 
         return User(
-            id=created["_id"],
-            username=created["username"],
-            email=created["email"],
-            is_active=created["is_active"]
+            id=str(new_user["_id"]),
+            username=new_user["username"],
+            email=new_user["email"],
+            is_active=new_user["is_active"]
         )
     
-    
-
