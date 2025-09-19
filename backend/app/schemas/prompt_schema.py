@@ -18,7 +18,7 @@ class PromptCreate(PromptBase):
 class Prompt(PromptBase):
     id: Optional[str] = None
     user_id: str
-    creation_date: datetime
+    pub_date: datetime
 
 
 class PromptUpdate(BaseModel):
