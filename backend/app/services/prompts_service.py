@@ -13,6 +13,10 @@ class PromptsService:
 
     def process_prompts_documents(prompts_documents):
         return [document_to_prompt(document) for document in prompts_documents]
+    
+    async def get_all(self):
+        prompts_documents = self.pormpts_repo.get()
+        return self.process_prompts_documents(prompts_documents)
 
     async def get_by_user(self, user_id: dict):
         prompts_documents = self.pormpts_repo.get({ "user_id": ObjectId(user_id) })
@@ -54,8 +58,8 @@ class PromptsService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Prompt not found"
             )
-
-        result = await self.pormpts_repo.update(prompt_id, update_data)
+        new_data = update_data.model_dump(exclude_unset=True)
+        result = await self.pormpts_repo.update(prompt_id, new_data)
         if not result.modified_count > 0:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
