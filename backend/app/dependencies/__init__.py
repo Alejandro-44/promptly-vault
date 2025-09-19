@@ -1,4 +1,4 @@
-from .database_deps import (get_repositories, RepositoryManager, RepositoriesDependency)
+from .database_deps import (get_repositories, RepositoryManager, RepositoriesDependency, ServicesDependency)
 from .auth_deps import (UserDependency, get_current_user, OAuth2Dependency)
 
 __all__ = [
@@ -11,4 +11,5 @@ __all__ = [
     "get_repositories",
     "RepositoryManager",
     "RepositoriesDependency",
+    "ServicesDependency",
 ]
