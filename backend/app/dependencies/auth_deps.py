@@ -4,7 +4,7 @@ from fastapi import HTTPException, Request, status
 from fastapi.params import Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from app.api.dependencies import RepositoriesDependency
+from app.dependencies import ServicesDependency
 from app.core.security import decode_access_token
 from app.schemas.user_schema import User
 
@@ -14,7 +14,7 @@ OAuth2Dependency = Annotated[str, Depends(oauth2_scheme)]
 
 async def get_current_user(
     request: Request,
-    repos: RepositoriesDependency,
+    services: ServicesDependency,
     token: OAuth2Dependency
 ):
     # Si no hay header Authorization, buscamos en cookies
@@ -38,7 +38,8 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = await repos.users.get_user(user_id)
+    user = await services.user.get_by_id(user_id)
+    
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

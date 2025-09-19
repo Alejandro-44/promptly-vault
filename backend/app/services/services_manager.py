@@ -1,5 +1,6 @@
 from app.repositories.user_repository import UserRepository
 from .user_service import UserService
+from .auth_service import AuthService
 
 class ServiceManager:
     def __init__(self, db):
@@ -7,8 +8,12 @@ class ServiceManager:
         # User service
         self.__user_repo = UserRepository(self.db)
         self.__user_service = UserService(self.__user_repo)
+        self.__auth_service = AuthService(self.__user_repo)
 
     @property
     def user(self) -> UserService:
         return self.__user_service
     
+    @property
+    def auth(self) -> AuthService:
+        return self.__auth_service
