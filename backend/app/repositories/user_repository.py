@@ -1,25 +1,27 @@
 from typing import Optional
 from bson.objectid import ObjectId
+from pymongo.collection import Collection
 
 from app.schemas.user_schema import User
 
 class UserRepository:
-    COLLECTION_NAME = "users"
-
     def __init__(self, database):
-        self.collection = database[self.COLLECTION_NAME]
+        self.collection: Collection = database["users"]
 
-    async def create_user(self, user_data: User) -> str:
+    async def create(self, user_data: User) -> str:
         result = await self.collection.insert_one(user_data)
         return str(result.inserted_id)
-
-    async def get_user(self, user_id: str) -> Optional[User]:
-        return await self.collection.find_one({"_id": ObjectId(user_id)})
     
-    async def get_user_by_email(self, email: str) -> Optional[User]:
-        return await self.collection.find_one({"email": email})
+    async def get_one_by(self, parameter: dict) -> Optional[User]:
+        return await self.collection.find_one(parameter)
+    
+    async def get_by_email(self, email: str) -> Optional[User]:
+        return await self.collection.find_one({ "email": email })
+    
+    async def get_by_id(self, user_id: str) -> Optional[User]:
+        return await self.collection.find_one({ "_id": ObjectId(user_id) })
 
-    async def update_user(self, user_id: str, update_data: dict) -> bool:
+    async def update(self, user_id: str, update_data: dict) -> bool:
         result = await self.collection.update_one(
             {"_id": ObjectId(user_id)},
             {"$set": update_data},
