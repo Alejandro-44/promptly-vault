@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status
 
 from app.dependencies import ServicesDependency, UserDependency
 from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate
@@ -41,34 +41,20 @@ async def delete_prompt(prompt_id: str, user: UserDependency, services: Services
 
 @router.get("/{prompt_id}/comments", response_model=list[Comment], status_code=status.HTTP_200_OK)
 async def get_comments(prompt_id: str, services: ServicesDependency):
-    return await services.comments.get_from(prompt_id)
+    return await services.comments.get_prompt_comments(prompt_id)
 
 
 @router.post("/{prompt_id}/comments", status_code=status.HTTP_201_CREATED)
 async def create_comment(
-    prompt_id: str,
     comment: CommentCreate,
+    prompt_id: str,
     user: UserDependency,
     services: ServicesDependency
     ):
-    new_comment = comment.model_dump()
-
-    try:
-        await services.comments.create(new_comment, user.id, prompt_id)
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Data base service unavailable",
-        )
-
-    return { "message": "New comment created"}
+    comment_id = services.comments.create(comment, prompt_id, user.id) 
+    return { "message": "New comment created", "id": comment_id}
 
 
 @router.delete("/comments/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_comment(comment_id: str, user: UserDependency, services: ServicesDependency):
-    comment = await services.comments.get_by_id(comment_id)
-
-    if user.id != comment.user_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No authorized to delete")
-    
-    await services.comments.delete(comment_id)
+    await services.comments.delete(comment_id, user.id)
