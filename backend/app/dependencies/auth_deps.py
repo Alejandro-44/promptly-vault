@@ -46,18 +46,13 @@ async def get_current_user(
             detail="Usuario no encontrado",
         )
 
-    if not user.get("is_active", True):
+    if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Usuario inactivo",
         )
     
-    return User(
-        id=str(user["_id"]),
-        email=user["email"],
-        username=user["username"],
-        is_active=user.get("is_active", True),
-    )
+    return user
 
 
 UserDependency = Annotated[User, Depends(get_current_user)]
