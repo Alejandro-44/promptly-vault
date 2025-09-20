@@ -52,3 +52,11 @@ class UserService:
             is_active=new_user["is_active"]
         )
     
+    async def deactivate(self, user_id: str) -> bool:
+        result = await self.repo.update(user_id, { "is_active": False })
+        if not result:
+            HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Something went wrong on db"
+            )
+        return result
