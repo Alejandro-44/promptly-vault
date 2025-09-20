@@ -51,7 +51,7 @@ async def create_comment(
     user: UserDependency,
     services: ServicesDependency
     ):
-    comment_id = services.comments.create(comment, prompt_id, user.id) 
+    comment_id = await services.comments.create(comment, prompt_id, user.id) 
     return { "message": "New comment created", "id": comment_id}
 
 

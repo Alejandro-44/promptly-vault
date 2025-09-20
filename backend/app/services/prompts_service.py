@@ -11,25 +11,25 @@ class PromptsService:
     def __init__(self, pormpts_repo: PromptsRepository):
         self.pormpts_repo = pormpts_repo
 
-    def process_prompts_documents(prompts_documents):
-        return [document_to_prompt(document) for document in prompts_documents]
+    def process_prompt_documents(self, prompt_documents):
+        return [document_to_prompt(document) for document in prompt_documents]
     
     async def get_all(self):
-        prompts_documents = self.pormpts_repo.get()
-        return self.process_prompts_documents(prompts_documents)
+        prompt_documents = await self.pormpts_repo.get()
+        return self.process_prompt_documents(prompt_documents)
 
     async def get_by_user(self, user_id: dict):
-        prompts_documents = self.pormpts_repo.get({ "user_id": ObjectId(user_id) })
-        return self.process_prompts_documents(prompts_documents)
+        prompt_documents = await self.pormpts_repo.get({ "user_id": ObjectId(user_id) })
+        return self.process_prompt_documents(prompt_documents)
     
     async def get_by_id(self, prompt_id: str):
-        prompt_document = self.pormpts_repo.get_by_id(prompt_id)
+        prompt_document = await self.pormpts_repo.get_by_id(prompt_id)
         if not prompt_document:
             HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Prompt not found"
             )
-        await document_to_prompt(prompt_document)
+        return document_to_prompt(prompt_document)
 
     async def create(self, prompt_in: PromptCreate, user_id: str):
         prompt_data = prompt_in.model_dump()

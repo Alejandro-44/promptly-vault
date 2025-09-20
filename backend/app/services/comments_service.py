@@ -17,7 +17,7 @@ class CommentsService:
 
     async def get_prompt_comments(self, prompt_id: str):
         comment_documents = await self.comments_repo.get_from(prompt_id)
-        return document_to_comment(comment_documents)
+        return self.process_comment_documents(comment_documents)
 
     async def create(self, comment_in: CommentCreate, prompt_id: str, user_id: str):
         comment_data = comment_in.model_dump()
