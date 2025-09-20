@@ -1,8 +1,10 @@
 from app.repositories.user_repository import UserRepository
 from app.repositories.prompts_repository import PromptsRepository
+from app.repositories.comments_repository import CommentsRepository
 from .prompts_service import PromptsService
 from .user_service import UserService
 from .auth_service import AuthService
+from .comments_service import CommentsService
 
 class ServiceManager:
     def __init__(self, db):
@@ -10,9 +12,11 @@ class ServiceManager:
         # User service
         self.__user_repo = UserRepository(self.db)
         self.__prompts_repo = PromptsRepository(self.db)
+        self.__comments_repo = CommentsRepository(self.db)
         self.__user_service = UserService(self.__user_repo)
         self.__auth_service = AuthService(self.__user_repo)
         self.__prompts_service = PromptsService(self.__prompts_repo)
+        self.__comments_service = CommentsService(self.__comments_repo)
 
     @property
     def user(self) -> UserService:
@@ -25,3 +29,7 @@ class ServiceManager:
     @property
     def prompts(self) -> PromptsService:
         return self.__prompts_service
+    
+    @property
+    def comments(self) -> CommentsService:
+        return self.__comments_service
