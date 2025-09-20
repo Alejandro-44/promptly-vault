@@ -23,3 +23,6 @@ async def get_my_prompts(current_user: UserDependency, service: ServicesDependen
     """
     return await service.prompts.get_by_user(current_user.id)
 
+@router.get("/{user_id}")
+async def get_user(user_id: str, service: ServicesDependency):
+    return await service.user.get_by_id(user_id)

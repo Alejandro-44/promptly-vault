@@ -1,6 +1,4 @@
-from typing import Optional
-from fastapi import HTTPException
-from bson import ObjectId
+from fastapi import HTTPException, status
 
 from app.schemas.user_schema import UserCreate, User
 from app.core.security import hash_password
@@ -13,8 +11,25 @@ class UserService:
     async def get_by_email(self, email: str):
         return await self.repo.get_by_email(email)
 
-    async def get_by_id(self, id: str):
-        return await self.repo.get_by_id(id)
+    async def get_by_id(self, user_id: str):
+        user_db = await self.repo.get_by_id(user_id)
+        if not user_db:
+            HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+        if not user_db["is_active"]:
+            return User(
+                id=str(user_db["_id"]),
+                username="deleted user",
+                email="deleted@deleted.com",
+                is_active=False
+            )
+
+        return User(
+            id=str(user_db["_id"]),
+            username=user_db["username"],
+            email=user_db["email"],
+            is_active=user_db["is_active"]
+        )
 
     async def register_user(self, user_in: UserCreate) -> User | HTTPException:
         existing = await self.get_by_email(user_in.email)
