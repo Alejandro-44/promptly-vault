@@ -9,5 +9,5 @@ def document_to_prompt(document) -> Prompt:
         model=document["model"],
         tags=document.get("tags", []),
         user_id=str(document["user_id"]),
-        creation_date=document["creation_date"],
+        pub_date=document["pub_date"],
     )

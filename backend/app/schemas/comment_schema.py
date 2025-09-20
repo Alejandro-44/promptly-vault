@@ -12,5 +12,5 @@ class Comment(CommentBase):
     id: str
     user_id: str
     prompt_id: str
-    creation_date: datetime
+    pub_date: datetime
 
