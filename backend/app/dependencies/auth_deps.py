@@ -17,7 +17,6 @@ async def get_current_user(
     services: ServicesDependency,
     token: OAuth2Dependency
 ):
-    # Si no hay header Authorization, buscamos en cookies
     if not token:
         token = request.cookies.get("access_token")
 
