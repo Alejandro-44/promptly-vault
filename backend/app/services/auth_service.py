@@ -8,7 +8,7 @@ class AuthService:
         self.user_repo = user_repo
 
     async def authenticate_user(self, email: str, password: str):
-        user = await self.user_repo.get_one_by({ "email": email })
+        user = await self.user_repo.get_by_email(email)
         if not user or not verify_password(password, user["hashed_password"]):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
