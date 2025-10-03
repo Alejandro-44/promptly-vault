@@ -3,9 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from pymongo import AsyncMongoClient
 
-from app.api.routes import auth_routes, user_routes, prompt_routes
+from app.routes import auth_routes, user_routes, prompt_routes
 from app.core.config import settings
-from app.core import db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

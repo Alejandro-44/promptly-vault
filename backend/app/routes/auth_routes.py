@@ -3,6 +3,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.schemas.user_schema import UserCreate, User, Token, UpdatePassword
 from app.dependencies import UserDependency, ServicesDependency 
+from app.core.exceptions import UserAlreadyExistsError, DatabaseError
+
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -12,7 +14,13 @@ async def register(user: UserCreate, services: ServicesDependency):
     """
     Create a new user
     """
-    return await services.user.register_user(user)
+    try:
+        return await services.user.register_user(user)
+    except UserAlreadyExistsError:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, message="Email aleady registered")
+    except DatabaseError as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, message="Failed to create user in service")
+
 
 
 @router.post("/login", response_model=Token, summary="Login with form-data (OAuth2)")
