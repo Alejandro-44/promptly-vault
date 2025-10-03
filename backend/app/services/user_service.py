@@ -1,8 +1,7 @@
-from fastapi import HTTPException, status
-
 from app.schemas.user_schema import UserCreate, User
 from app.core.security import hash_password
 from app.repositories.user_repository import UserRepository
+from app.core.exceptions import UserNotFoundError, UserAlreadyExistsError, DatabaseError
 
 class UserService:
     def __init__(self, user_repo: UserRepository):
@@ -14,7 +13,7 @@ class UserService:
     async def get_by_id(self, user_id: str):
         user_db = await self.user_repo.get_by_id(user_id)
         if not user_db:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise UserNotFoundError()
 
         if not user_db["is_active"]:
             return User(
@@ -31,10 +30,10 @@ class UserService:
             is_active=user_db["is_active"]
         )
 
-    async def register_user(self, user_in: UserCreate) -> User | HTTPException:
+    async def register_user(self, user_in: UserCreate) -> User | Exception:
         existing = await self.get_by_email(user_in.email)
         if existing:
-            raise HTTPException(status_code=400, detail="Email already registered")
+            raise UserAlreadyExistsError()
 
         new_user = {
             "username": user_in.username,
@@ -44,6 +43,8 @@ class UserService:
         }
 
         new_user_id = await self.user_repo.create(new_user)
+        if not new_user_id:
+            raise DatabaseError("Failed to create user")
 
         return User(
             id=new_user_id,
@@ -55,8 +56,5 @@ class UserService:
     async def deactivate(self, user_id: str) -> bool:
         result = await self.user_repo.update(user_id, { "is_active": False })
         if not result:
-            HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Something went wrong on db"
-            )
+            raise DatabaseError("Failed to deactivate user")
         return result
