@@ -44,7 +44,7 @@ class UserService:
 
         new_user_id = await self.user_repo.create(new_user)
         if not new_user_id:
-            raise DatabaseError("Failed to create user")
+            raise DatabaseError()
 
         return User(
             id=new_user_id,
