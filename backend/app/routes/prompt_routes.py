@@ -1,8 +1,9 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, HTTPException, status
 
 from app.dependencies import ServicesDependency, UserDependency
 from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate
 from app.schemas.comment_schema import Comment, CommentCreate
+from app.core.exceptions import PromptNotFoundError, DatabaseError
 
 router = APIRouter(prefix="/prompts", tags=["Prompts"])
 
@@ -14,13 +15,26 @@ async def get_prompts(services: ServicesDependency):
 
 @router.get("/{prompt_id}", response_model=Prompt, status_code=status.HTTP_200_OK)
 async def get_prompt(prompt_id: str, services: ServicesDependency):
-    return await services.prompts.get_by_id(prompt_id)
+    try:
+        return await services.prompts.get_by_id(prompt_id)
+    except PromptNotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Prompt not found"
+        )
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_prompt(prompt: PromptCreate, user: UserDependency, services: ServicesDependency):
-    prompt_id = await services.prompts.create(prompt, user.id)
-    return { "message": "New prompt created", "id": prompt_id}
+    try:
+        prompt_id = await services.prompts.create(prompt, user.id)
+        return { "message": "New prompt created", "id": prompt_id}
+    except DatabaseError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Failed to create new prompt"
+        )
+
 
 
 @router.patch("/{prompt_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -30,13 +44,34 @@ async def update_prompt(
     user: UserDependency,
     services: ServicesDependency
     ):
-    
-    await services.prompts.update(user.id, prompt_id, prompt_update)
+    try:
+        await services.prompts.update(user.id, prompt_id, prompt_update)
+    except PromptNotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Prompt not found"
+        )
+    except DatabaseError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Failed to update prompt"
+        )
 
 
 @router.delete("/{prompt_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_prompt(prompt_id: str, user: UserDependency, services: ServicesDependency):
-    await services.prompts.delete(user.id, prompt_id)
+    try:
+        await services.prompts.delete(user.id, prompt_id)
+    except PromptNotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Prompt not found"
+        )
+    except DatabaseError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Failed to delete new prompt"
+        )
 
 
 @router.get("/{prompt_id}/comments", response_model=list[Comment], status_code=status.HTTP_200_OK)
