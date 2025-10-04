@@ -6,3 +6,12 @@ class UserAlreadyExistsError(Exception):
 
 class DatabaseError(Exception):
     """Raised when a database operation fails."""
+
+class UnauthorizedError(Exception):
+    """Raised when user fails in its authentication"""
+
+class EmailNotRegisteredError(Exception):
+    """Raised when trying to login an unregistered user"""
+
+class WrongPasswordError(Exception):
+    """Raised when put incorrect password to chain it"""

@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.schemas.user_schema import UserCreate, User, Token, UpdatePassword
 from app.dependencies import UserDependency, ServicesDependency 
-from app.core.exceptions import UserAlreadyExistsError, DatabaseError
+from app.core.exceptions import UserAlreadyExistsError, DatabaseError, EmailNotRegisteredError, UserNotFoundError, WrongPasswordError
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -17,9 +17,15 @@ async def register(user: UserCreate, services: ServicesDependency):
     try:
         return await services.user.register_user(user)
     except UserAlreadyExistsError:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, message="Email aleady registered")
-    except DatabaseError as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, message="Failed to create user in service")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT
+            , message="Email aleady registered"
+        )
+    except DatabaseError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            message="Failed to create user in service"
+        )
 
 
 
@@ -32,17 +38,23 @@ async def login_oauth(
     """
     Login with OAuth2 a user and create a cookie with a JWT token
     """
-    token = await services.auth.login(form_data.username, form_data.password)
+    try:
+        token = await services.auth.login(form_data.username, form_data.password)
     
-    response.set_cookie(
-        key="access_token",
-        value=token,
-        httponly=True,
-        secure=True,      # Solo HTTPS en producción
-        samesite="strict" # evita CSRF básico
-    )
+        response.set_cookie(
+            key="access_token",
+            value=token,
+            httponly=True,
+            secure=True,      # Solo HTTPS en producción
+            samesite="strict" # evita CSRF básico
+        )
 
-    return Token(access_token=token)
+        return Token(access_token=token)
+    except EmailNotRegisteredError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
 
 
 @router.post("/logout", summary="Logout", status_code=status.HTTP_204_NO_CONTENT)
@@ -68,7 +80,20 @@ async def change_password(
     """
     Change the password of the current user
     """
-    updated = await services.auth.change_password(user.id, request.old_password, request.new_password)
-    if not updated:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+    try:
+        await services.auth.change_password(user.id, request.old_password, request.new_password)
+    except UserNotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    except WrongPasswordError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Wrong password"
+        )
+    except DatabaseError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update user"
+        )

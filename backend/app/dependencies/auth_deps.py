@@ -7,6 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 from app.dependencies import ServicesDependency
 from app.core.security import decode_access_token
 from app.schemas.user_schema import User
+from app.core.exceptions import UserNotFoundError
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -37,18 +38,18 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = await services.user.get_by_id(user_id)
-    
-    if not user:
+    try:
+        user = await services.user.get_by_id(user_id)
+    except UserNotFoundError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Usuario no encontrado",
+            detail="User not found",
         )
 
     if not user.is_active:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Usuario inactivo",
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Inactive user",
         )
     
     return user
