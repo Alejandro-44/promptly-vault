@@ -19,3 +19,5 @@ class WrongPasswordError(Exception):
 class PromptNotFoundError(Exception):
     """Raised when a prompt is not found in the database"""
 
+class CommentNotFoundError(Exception):
+    """Raised when a comment is not found in database"""

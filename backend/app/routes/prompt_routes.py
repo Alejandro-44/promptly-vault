@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, status
 from app.dependencies import ServicesDependency, UserDependency
 from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate
 from app.schemas.comment_schema import Comment, CommentCreate
-from app.core.exceptions import PromptNotFoundError, DatabaseError
+from app.core.exceptions import PromptNotFoundError, DatabaseError, CommentNotFoundError
 
 router = APIRouter(prefix="/prompts", tags=["Prompts"])
 
@@ -92,4 +92,10 @@ async def create_comment(
 
 @router.delete("/comments/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_comment(comment_id: str, user: UserDependency, services: ServicesDependency):
-    await services.comments.delete(comment_id, user.id)
+    try:
+        await services.comments.delete(comment_id, user.id)
+    except CommentNotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Comment not found"
+        )
