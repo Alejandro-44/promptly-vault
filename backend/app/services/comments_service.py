@@ -1,11 +1,11 @@
 from datetime import datetime
 
 from bson import ObjectId
-from fastapi import HTTPException, status
 
 from app.schemas.comment_schema import CommentCreate
 from app.repositories.comments_repository import CommentsRepository
 from app.helpers.comment_parser import document_to_comment
+from app.core.exceptions import CommentNotFoundError
 
 class CommentsService:
 
@@ -34,11 +34,7 @@ class CommentsService:
     async def delete(self, comment_id, user_id):
         comment_document = await self.comments_repo.get_one_by_user(comment_id, user_id)
         if not comment_document:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Comment not found"
-            )
+            raise CommentNotFoundError()
         
         await self.comments_repo.delete(comment_id)
     
-
