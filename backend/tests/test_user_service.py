@@ -5,7 +5,6 @@ from app.schemas.user_schema import UserCreate
 
 @pytest.mark.asyncio
 async def test_get_by_id_returns_user(mocker):
-    # Mock del repositorio
     mock_repo = mocker.AsyncMock()
     mock_repo.get_by_id.return_value = {
         "_id": "123",
@@ -51,12 +50,10 @@ async def test_get_by_id_returns_deleted_user(mocker):
 
 @pytest.mark.asyncio
 async def test_register_user_success(mocker):
-    # mock del repositorio
     mock_repo = mocker.AsyncMock()
     mock_repo.create.return_value = "abc123"
     mock_repo.get_by_email.return_value = None
 
-    # mock de hash_password
     mocker.patch("app.services.user_service.hash_password", return_value="hashed_pw")
 
     user_in = UserCreate(username="Alice", email="alice@example.com", password="1234")

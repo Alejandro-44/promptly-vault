@@ -3,7 +3,6 @@ from app.repositories.user_repository import UserRepository
 
 @pytest.mark.asyncio
 async def test_create_user_returns_id(mocker):
-    # mock de la colección
     mock_collection = mocker.AsyncMock()
     mock_insert_result = mocker.Mock(inserted_id="abc123")
     mock_collection.insert_one.return_value = mock_insert_result
