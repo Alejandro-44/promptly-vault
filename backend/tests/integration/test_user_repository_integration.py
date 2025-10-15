@@ -3,7 +3,7 @@ import pytest
 from app.repositories.user_repository import UserRepository
 
 @pytest.mark.asyncio
-async def test_repository_crud(db):
+async def test_user_lifecycle(db):
     repo = UserRepository(db)
 
     user_data = {"username": "John", "email": "john@example.com", "is_active": True}
