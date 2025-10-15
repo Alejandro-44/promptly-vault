@@ -1,4 +1,3 @@
-# conftest.py
 from httpx import ASGITransport, AsyncClient
 
 import pytest
@@ -8,6 +7,17 @@ from pymongo import AsyncMongoClient
 from app.services.services_manager import ServiceManager
 from app.dependencies.database_deps import get_services
 from app.main import app
+
+@pytest.fixture
+def mock_repo(mocker):
+    return mocker.AsyncMock()
+
+
+@pytest.fixture
+def service_factory(mock_repo):
+    def _factory(service_class):
+        return service_class(mock_repo)
+    return _factory
 
 
 @pytest.fixture(scope="session")
