@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from fastapi import HTTPException, status
 from bson import ObjectId
 
 from app.repositories.prompts_repository import PromptsRepository

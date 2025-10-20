@@ -1,76 +1,96 @@
 import pytest
 
+
 @pytest.mark.asyncio
 async def test_register_user_success(e2e_client):
+    test_user = {"username": "alice", "email": "alice@example.com", "password": "1234"} 
     response = await e2e_client.post(
         "/auth/register",
-        json={"username": "alice", "email": "alice@example.com", "password": "1234"}
+        json=test_user
     )
 
     assert response.status_code == 201
     data = response.json()
-    assert data["email"] == "alice@example.com"
-    assert "id" in data or "_id" in data
+    assert data["email"] == test_user["email"]
+    assert "id" in data
 
 
 @pytest.mark.asyncio
 async def test_register_user_conflict(e2e_client):
-    user = {"username": "bob", "email": "bob@example.com", "password": "abcd"}
-    await e2e_client.post("/auth/register", json=user)
+    test_user = {"username": "bob", "email": "bob@example.com", "password": "abcd"}
+    await e2e_client.post("/auth/register", json=test_user)
 
-    response = await e2e_client.post("/auth/register", json=user)
+    response = await e2e_client.post("/auth/register", json=test_user)
     assert response.status_code == 409
 
 
 @pytest.mark.asyncio
-async def test_login_success_and_cookie_set(e2e_client):
-    await e2e_client.post(
-        "/auth/register",
-        json={"username": "carol", "email": "carol@example.com", "password": "1234"}
-    )
+async def test_login_flow_with_cookie(e2e_client):
+    test_user = {
+        "username": "test",
+        "email": "test@example.com",
+        "password": "examplePass123",
+    }
 
-    response = await e2e_client.post(
-        "/auth/login",
-        data={"username": "carol@example.com", "password": "1234"}
-    )
+    response = await e2e_client.post("/auth/register", json=test_user)
+    assert response.status_code == 201
 
+    login_data = {
+        "username": test_user["email"],
+        "password": test_user["password"],
+    }
+
+    response = await e2e_client.post("/auth/login", data=login_data)
+    assert response.status_code == 200
+
+    assert "access_token" in response.cookies, "Cookie not found in request"
+
+    cookie_client = e2e_client
+    cookie_client.cookies.set("access_token", response.cookies.get("access_token"))
+
+    response = await cookie_client.get("users/me")
     assert response.status_code == 200
     data = response.json()
-    assert "access_token" in data
-    assert "access_token" in response.cookies
+
+    assert data["email"] == test_user["email"]
 
 
 @pytest.mark.asyncio
 async def test_login_user_not_found(e2e_client):
+    test_user = {"username": "ghost@example.com", "password": "xxx"}
     response = await e2e_client.post(
         "/auth/login",
-        data={"username": "ghost@example.com", "password": "xxx"}
+        data=test_user
     )
     assert response.status_code == 404
 
 
 @pytest.mark.asyncio
 async def test_change_password_success(e2e_client):
+    test_user = {"username": "eva", "email": "eva@example.com", "password": "oldpass"}
+
     await e2e_client.post(
         "/auth/register",
-        json={"username": "eva", "email": "eva@example.com", "password": "oldpass"}
+        json=test_user
     )
 
     response = await e2e_client.post(
         "/auth/login",
-        data={"username": "eva@example.com", "password": "oldpass"}
+        data={"username": test_user["email"], "password": test_user["password"]}
     )
 
     assert response.status_code == 200
-    token = response.json()["access_token"]
 
-    response = await e2e_client.post(
+    cookie_client = e2e_client
+    cookie_client.cookies.set("access_token", response.cookies.get("access_token"))
+
+    response = await cookie_client.post(
         "/auth/change-password",
         json={"old_password": "oldpass", "new_password": "newpass"},
-        headers={"Authorization": f"Bearer {token}"}
     )
 
     assert response.status_code == 204
+
 
 @pytest.mark.asyncio
 async def test_change_password_wrong_password(e2e_client):
