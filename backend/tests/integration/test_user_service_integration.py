@@ -11,7 +11,6 @@ async def test_register_and_get_user(services):
     user = await services.user.register_user(user_in)
     assert user.email == "alice@example.com"
 
-    # Recuperar desde MongoDB real
     found = await services.user.get_by_id(user.id)
     assert found.username == "Alice"
     assert found.is_active
@@ -34,11 +33,9 @@ async def test_deactivate_user_changes_status(services):
     user_in = UserCreate(username="Eve", email="eve@example.com", password="xyz")
     user = await services.user.register_user(user_in)
 
-    # Desactivar usuario
     result = await services.user.deactivate(user.id)
     assert result is True
 
-    # Consultar nuevamente
     found = await services.user.get_by_id(user.id)
     assert found.username == "deleted user"
     assert not found.is_active

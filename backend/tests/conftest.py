@@ -34,7 +34,7 @@ async def db(mongo_connection_url):
     collections = await db.list_collection_names()
     for coll in collections:
         await db[coll].delete_many({})
-    client.close()
+    await client.close()
 
 
 @pytest.fixture()
