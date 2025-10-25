@@ -18,7 +18,7 @@ def service(service_factory):
 @pytest.mark.asyncio
 async def test_get_all(service, mock_repo, mocker):
     mock_repo.get.return_value = [{"title": "T1"}, {"title": "T2"}]
-    mocker.patch("app.services.prompts_service.document_to_prompt", side_effect=lambda x: x)
+    mocker.patch("app.schemas.prompt_schema.Prompt.from_document", side_effect=lambda x: x)
 
     result = await service.get_all()
 
@@ -29,7 +29,7 @@ async def test_get_all(service, mock_repo, mocker):
 @pytest.mark.asyncio
 async def test_get_by_user(service, mock_repo, mocker):
     mock_repo.get.return_value = [{"user_id": ObjectId(MOCK_USER_ID)}]
-    mocker.patch("app.services.prompts_service.document_to_prompt", side_effect=lambda x: x)
+    mocker.patch("app.schemas.prompt_schema.Prompt.from_document", side_effect=lambda x: x)
 
     result = await service.get_by_user(MOCK_USER_ID)
 
@@ -40,12 +40,12 @@ async def test_get_by_user(service, mock_repo, mocker):
 @pytest.mark.asyncio
 async def test_get_by_id_found(service, mock_repo, mocker):
     mock_repo.get_by_id.return_value = {"_id": ObjectId(MOCK_PROMPT_ID)}
-    mocker.patch("app.services.prompts_service.document_to_prompt", return_value="processed")
+    mocker.patch("app.schemas.prompt_schema.Prompt.from_document", side_effect=lambda prompt: str(prompt["_id"]))
 
     result = await service.get_by_id(MOCK_PROMPT_ID)
 
     mock_repo.get_by_id.assert_awaited_once_with(MOCK_PROMPT_ID)
-    assert result == "processed"
+    assert result == MOCK_PROMPT_ID
 
 
 @pytest.mark.asyncio
@@ -67,7 +67,7 @@ async def test_create_prompt_success(service, mock_repo):
     )
     mock_repo.create.return_value = MOCK_PROMPT_ID
 
-    result = await service.create(prompt_in, "507f1f77bcf86cd799439012")
+    result = await service.create(MOCK_USER_ID ,prompt_in)
 
     mock_repo.create.assert_awaited_once()
     assert result == MOCK_PROMPT_ID
@@ -85,7 +85,7 @@ async def test_create_prompt_database_error(service, mock_repo):
     mock_repo.create.side_effect = Exception("DB failure")
 
     with pytest.raises(DatabaseError):
-        await service.create(prompt_in, "507f1f77bcf86cd799439012")
+        await service.create(MOCK_USER_ID, prompt_in)
 
 
 @pytest.mark.asyncio
@@ -123,7 +123,7 @@ async def test_update_prompt_no_modification(service, mock_repo):
 async def test_delete_prompt_success(service, mock_repo):
     mock_repo.delete.return_value = True
 
-    result = await service.delete(MOCK_USER_ID, MOCK_PROMPT_ID)
+    result = await service.delete(MOCK_PROMPT_ID, MOCK_USER_ID)
 
     mock_repo.delete.assert_awaited_once_with(MOCK_PROMPT_ID, MOCK_USER_ID)
     assert result is True
