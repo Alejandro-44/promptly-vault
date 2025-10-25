@@ -15,6 +15,16 @@ class Comment(CommentBase):
     prompt_id: str
     pub_date: datetime
 
+    @staticmethod
+    def from_document(document):
+        return Comment(
+            id=str(document["_id"]),
+            content=document["content"],
+            prompt_id=str(document["prompt_id"]),
+            user_id=str(document["user_id"]),
+            pub_date=document["pub_date"],
+        )
+
 class CommentUpdate(BaseModel):
     content: Optional[str] = None
     user_id: Optional[str] = None

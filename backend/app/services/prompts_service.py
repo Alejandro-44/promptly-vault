@@ -3,8 +3,7 @@ from datetime import datetime
 from bson import ObjectId
 
 from app.repositories.prompts_repository import PromptsRepository
-from app.schemas.prompt_schema import PromptCreate, PromptUpdate
-from app.helpers.prompt_parser import document_to_prompt
+from app.schemas.prompt_schema import PromptCreate, PromptUpdate, Prompt
 from app.core.exceptions import PromptNotFoundError, DatabaseError
 
 class PromptsService:
@@ -13,7 +12,7 @@ class PromptsService:
         self.prompts_repo = prompts_repo
 
     def process_prompt_documents(self, prompt_documents):
-        return [document_to_prompt(document) for document in prompt_documents]
+        return [Prompt.from_document(document) for document in prompt_documents]
 
     async def get_all(self):
         prompt_documents = await self.prompts_repo.get()
@@ -28,7 +27,7 @@ class PromptsService:
         if not prompt_document:
             raise PromptNotFoundError()
 
-        return document_to_prompt(prompt_document)
+        return Prompt.from_document(prompt_document)
 
     async def create(self, prompt_in: PromptCreate, user_id: str):
         prompt_data = prompt_in.model_dump()

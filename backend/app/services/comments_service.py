@@ -2,21 +2,17 @@ from datetime import datetime
 
 from bson import ObjectId
 
-from app.schemas.comment_schema import CommentCreate, CommentUpdate
+from app.schemas.comment_schema import CommentCreate, CommentUpdate, Comment
 from app.repositories.comments_repository import CommentsRepository
-from app.helpers.comment_parser import document_to_comment
 from app.core.exceptions import CommentNotFoundError
 
 class CommentsService:
     def __init__(self, comments_repo: CommentsRepository):
         self.comments_repo = comments_repo
 
-    def process_comment_documents(self, comment_documents):
-        return [document_to_comment(comment) for comment in comment_documents]
-
     async def get_prompt_comments(self, prompt_id: str):
         comment_documents = await self.comments_repo.get_by_prompt(prompt_id)
-        return self.process_comment_documents(comment_documents)
+        return [Comment.from_document(document) for document in comment_documents]
 
     async def create(self, comment_in: CommentCreate, prompt_id: str, user_id: str):
         comment_data = comment_in.model_dump()
