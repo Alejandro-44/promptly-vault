@@ -27,6 +27,3 @@ class Comment(CommentBase):
 
 class CommentUpdate(BaseModel):
     content: Optional[str] = None
-    user_id: Optional[str] = None
-    prompt_id: Optional[str] = None
-    pub_date: Optional[datetime] = None
