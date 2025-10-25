@@ -28,7 +28,7 @@ async def get_prompt(prompt_id: str, services: ServicesDependency):
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_prompt(prompt: PromptCreate, user: UserDependency, services: ServicesDependency):
     try:
-        prompt_id = await services.prompts.create(prompt, user.id)
+        prompt_id = await services.prompts.create(user.id, prompt)
         return { "message": "New prompt created", "id": prompt_id}
     except DatabaseError:
         raise HTTPException(
@@ -45,7 +45,7 @@ async def update_prompt(
     services: ServicesDependency
     ):
     try:
-        await services.prompts.update(user.id, prompt_id, prompt_update)
+        await services.prompts.update(prompt_id, user.id, prompt_update)
     except PromptNotFoundError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -61,7 +61,7 @@ async def update_prompt(
 @router.delete("/{prompt_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_prompt(prompt_id: str, user: UserDependency, services: ServicesDependency):
     try:
-        await services.prompts.delete(user.id, prompt_id)
+        await services.prompts.delete(prompt_id, user.id)
     except PromptNotFoundError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -86,7 +86,7 @@ async def create_comment(
     user: UserDependency,
     services: ServicesDependency
     ):
-    comment_id = await services.comments.create(comment, prompt_id, user.id) 
+    comment_id = await services.comments.create(prompt_id, user.id, comment) 
     return { "message": "New comment created", "id": comment_id}
 
 
