@@ -5,6 +5,7 @@ from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate
 from app.schemas.comment_schema import Comment, CommentCreate
 from app.core.exceptions import PromptNotFoundError, DatabaseError, CommentNotFoundError
 
+
 router = APIRouter(prefix="/prompts", tags=["Prompts"])
 
 
@@ -34,7 +35,6 @@ async def create_prompt(prompt: PromptCreate, user: UserDependency, services: Se
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Failed to create new prompt"
         )
-
 
 
 @router.patch("/{prompt_id}", status_code=status.HTTP_204_NO_CONTENT)

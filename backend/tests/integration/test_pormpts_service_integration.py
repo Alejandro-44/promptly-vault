@@ -7,9 +7,9 @@ from app.core.exceptions import PromptNotFoundError, DatabaseError
 @pytest.mark.asyncio
 async def test_create_prompt_success(services):
     prompt_in = PromptCreate(
-        title="Prompt de prueba",
+        title="Test prompt",
         prompt="Test prompt",
-        result_example="general",
+        result_example="something incredible",
         model="ChatGPT",
         tags=["ai", "nlp"],
     )
@@ -20,7 +20,7 @@ async def test_create_prompt_success(services):
     assert isinstance(prompt_id, str)
     prompt = await services.prompts.get_by_id(prompt_id)
 
-    assert prompt.title == "Prompt de prueba"
+    assert prompt.title == "Test prompt"
     assert prompt.user_id == user_id
     assert prompt.model == "ChatGPT"
 
@@ -65,9 +65,9 @@ async def test_update_prompt_success(services):
     user_id = str(ObjectId())
 
     prompt_in = PromptCreate(
-        title="Prompt de prueba",
+        title="Test prompt",
         prompt="Test prompt",
-        result_example="general",
+        result_example="something incredible",
         model="ChatGPT",
         tags=["ai", "nlp"],
     )
@@ -100,9 +100,9 @@ async def test_delete_prompt_success(services):
     user_id = str(ObjectId())
 
     prompt_in = PromptCreate(
-        title="Prompt de prueba",
+        title="Test prompt",
         prompt="Test prompt",
-        result_example="general",
+        result_example="something incredible",
         model="ChatGPT",
         tags=["ai", "nlp"],
     )
