@@ -1,17 +1,20 @@
+from typing import Optional
+
 from app.schemas.user_schema import UserCreate, User
 from app.core.security import hash_password
 from app.repositories.user_repository import UserRepository
 from app.core.exceptions import UserNotFoundError, UserAlreadyExistsError, DatabaseError
 
 class UserService:
-    def __init__(self, user_repo: UserRepository):
-        self.user_repo = user_repo
-    
-    async def get_by_email(self, email: str):
-        return await self.user_repo.get_by_email(email)
 
-    async def get_by_id(self, user_id: str):
-        user_doc = await self.user_repo.get_by_id(user_id)
+    def __init__(self, user_repo: UserRepository):
+        self.__user_repo = user_repo
+    
+    async def get_by_email(self, email: str) -> Optional[User]:
+        return await self.__user_repo.get_by_email(email)
+
+    async def get_by_id(self, user_id: str) -> User | Exception:
+        user_doc = await self.__user_repo.get_by_id(user_id)
         if not user_doc:
             raise UserNotFoundError()
 
@@ -42,7 +45,7 @@ class UserService:
         }
 
         try:
-            new_user_id = await self.user_repo.create(new_user)
+            new_user_id = await self.__user_repo.create(new_user)
         except:
             raise DatabaseError()
 
@@ -54,7 +57,7 @@ class UserService:
         )
     
     async def deactivate(self, user_id: str) -> bool:
-        deactivated = await self.user_repo.update(user_id, { "is_active": False })
+        deactivated = await self.__user_repo.update(user_id, { "is_active": False })
         if not deactivated:
             raise DatabaseError("Failed to deactivate user")
         return deactivated
