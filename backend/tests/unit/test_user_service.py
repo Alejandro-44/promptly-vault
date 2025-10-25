@@ -77,7 +77,7 @@ async def test_register_user_raises_already_exists(service, mock_repo):
 @pytest.mark.asyncio
 async def test_register_user_raises_database_error(service, mock_repo, mocker):
     mock_repo.get_by_email.return_value = None
-    mock_repo.create.return_value = None  # simulate DB failure
+    mock_repo.create.side_effect = Exception()
 
     mocker.patch("app.services.user_service.hash_password", return_value="hashed_pw")
 

@@ -24,5 +24,3 @@ class UserRepository:
             {"$set": update_data},
         )
         return result.modified_count > 0
-
-

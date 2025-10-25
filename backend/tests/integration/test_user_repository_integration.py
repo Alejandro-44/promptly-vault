@@ -6,7 +6,7 @@ from app.repositories.user_repository import UserRepository
 async def test_user_lifecycle(db):
     repo = UserRepository(db)
 
-    user_data = {"username": "John", "email": "john@example.com", "is_active": True}
+    user_data = { "username": "John", "email": "john@example.com", "is_active": True }
 
     # --- CREATE ---
     user_id = await repo.create(user_data)
@@ -21,5 +21,5 @@ async def test_user_lifecycle(db):
     assert updated is True
 
     # --- GET BY ID ---
-    found2 = await repo.get_by_id(user_id)
-    assert found2["is_active"] is False
+    found = await repo.get_by_id(user_id)
+    assert found["is_active"] is False

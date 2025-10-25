@@ -11,27 +11,26 @@ class UserService:
         return await self.user_repo.get_by_email(email)
 
     async def get_by_id(self, user_id: str):
-        user_db = await self.user_repo.get_by_id(user_id)
-        if not user_db:
+        user_doc = await self.user_repo.get_by_id(user_id)
+        if not user_doc:
             raise UserNotFoundError()
 
-        if not user_db["is_active"]:
+        if not user_doc["is_active"]:
             return User(
-                id=str(user_db["_id"]),
+                id=str(user_doc["_id"]),
                 username="deleted user",
                 email="deleted@deleted.com",
                 is_active=False
             )
 
-        return User(
-            id=str(user_db["_id"]),
-            username=user_db["username"],
-            email=user_db["email"],
-            is_active=user_db["is_active"]
-        )
+        return User.from_document(user_doc)
 
     async def register_user(self, user_in: UserCreate) -> User | Exception:
-        existing = await self.get_by_email(user_in.email)
+        try:
+            existing = await self.get_by_email(user_in.email)
+        except:
+            pass
+
         if existing:
             raise UserAlreadyExistsError()
 
@@ -42,8 +41,9 @@ class UserService:
             "is_active": True,
         }
 
-        new_user_id = await self.user_repo.create(new_user)
-        if not new_user_id:
+        try:
+            new_user_id = await self.user_repo.create(new_user)
+        except:
             raise DatabaseError()
 
         return User(
@@ -54,7 +54,7 @@ class UserService:
         )
     
     async def deactivate(self, user_id: str) -> bool:
-        result = await self.user_repo.update(user_id, { "is_active": False })
-        if not result:
+        deactivated = await self.user_repo.update(user_id, { "is_active": False })
+        if not deactivated:
             raise DatabaseError("Failed to deactivate user")
-        return result
+        return deactivated
