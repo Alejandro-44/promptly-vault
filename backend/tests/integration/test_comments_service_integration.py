@@ -46,7 +46,7 @@ async def test_update_comment_success(services):
 
 
 @pytest.mark.asyncio
-async def test_update_prompt_not_found_raises_error(services):
+async def test_update_comment_not_found_raises_error(services):
     with pytest.raises(CommentNotFoundError):
         await services.comments.update(
             MOCK_RANDOM_ID, MOCK_USER_ID, CommentCreate(content="Test")
@@ -54,7 +54,7 @@ async def test_update_prompt_not_found_raises_error(services):
 
 
 @pytest.mark.asyncio
-async def test_delete_prompt_success(services):
+async def test_delete_comment_success(services):
     mock_comment = CommentCreate(
         content="Awesome!"
     )
