@@ -1,5 +1,4 @@
 from fastapi import APIRouter, status
-from bson import ObjectId
 
 from app.dependencies import UserDependency, ServicesDependency
 from app.schemas.prompt_schema import Prompt
