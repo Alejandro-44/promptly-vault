@@ -18,6 +18,15 @@ class User(BaseModel):
     email: EmailStr
     is_active: bool
 
+    @staticmethod
+    def from_document(document):
+        return User(
+            id=str(document["_id"]),
+            username=document["username"],
+            email=document["email"],
+            is_active=document["is_active"]
+        )
+
 
 class UpdatePassword(BaseModel):
     old_password: str
