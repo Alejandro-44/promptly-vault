@@ -7,20 +7,20 @@ from app.core.exceptions import PromptNotFoundError, DatabaseError
 @pytest.mark.asyncio
 async def test_create_prompt_success(services):
     prompt_in = PromptCreate(
-        title="Prompt de prueba",
+        title="Test prompt",
         prompt="Test prompt",
-        result_example="general",
+        result_example="something incredible",
         model="ChatGPT",
         tags=["ai", "nlp"],
     )
 
     user_id = str(ObjectId())
-    prompt_id = await services.prompts.create(prompt_in, user_id)
+    prompt_id = await services.prompts.create(user_id, prompt_in)
 
     assert isinstance(prompt_id, str)
     prompt = await services.prompts.get_by_id(prompt_id)
 
-    assert prompt.title == "Prompt de prueba"
+    assert prompt.title == "Test prompt"
     assert prompt.user_id == user_id
     assert prompt.model == "ChatGPT"
 
@@ -46,8 +46,8 @@ async def test_get_by_user_returns_only_user_prompts(services):
         tags=["ai"],
     )
 
-    await services.prompts.create(prompt_a, user_a)
-    await services.prompts.create(prompt_b, user_b)
+    await services.prompts.create(user_a, prompt_a)
+    await services.prompts.create(user_b, prompt_b)
 
     prompts_user_a = await services.prompts.get_by_user(user_a)
     assert len(prompts_user_a) == 1
@@ -65,31 +65,29 @@ async def test_update_prompt_success(services):
     user_id = str(ObjectId())
 
     prompt_in = PromptCreate(
-        title="Prompt de prueba",
+        title="Test prompt",
         prompt="Test prompt",
-        result_example="general",
+        result_example="something incredible",
         model="ChatGPT",
         tags=["ai", "nlp"],
     )
 
-    prompt_id = await services.prompts.create(prompt_in, user_id)
+    prompt_id = await services.prompts.create(user_id, prompt_in)
 
-    update_data = PromptUpdate(title="Nuevo título", model="Claude")
-    result = await services.prompts.update(user_id, prompt_id, update_data)
+    update_data = PromptUpdate(title="New Title", model="Claude")
+    result = await services.prompts.update(prompt_id, user_id, update_data)
 
     assert result is True
 
     updated_prompt = await services.prompts.get_by_id(prompt_id)
-    assert updated_prompt.title == "Nuevo título"
+    assert updated_prompt.title == "New Title"
     assert updated_prompt.model == "Claude"
 
 
 @pytest.mark.asyncio
 async def test_update_prompt_not_found_raises_error(services):
-    prompts_service = services.prompts
-
     with pytest.raises(PromptNotFoundError):
-        await prompts_service.update(
+        await services.prompts.update(
             str(ObjectId()), str(ObjectId()), PromptUpdate(title="Test")
         )
 
@@ -100,15 +98,15 @@ async def test_delete_prompt_success(services):
     user_id = str(ObjectId())
 
     prompt_in = PromptCreate(
-        title="Prompt de prueba",
+        title="Test prompt",
         prompt="Test prompt",
-        result_example="general",
+        result_example="something incredible",
         model="ChatGPT",
         tags=["ai", "nlp"],
     )
-    prompt_id = await prompts_service.create(prompt_in, user_id)
+    prompt_id = await prompts_service.create(user_id, prompt_in)
 
-    result = await prompts_service.delete(user_id, prompt_id)
+    result = await prompts_service.delete(prompt_id, user_id)
     assert result is True
 
     with pytest.raises(PromptNotFoundError):

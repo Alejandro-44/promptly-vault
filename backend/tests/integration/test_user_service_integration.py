@@ -20,10 +20,8 @@ async def test_register_and_get_user(services):
 async def test_register_duplicate_user_raises_error(services):
     user_in = UserCreate(username="Bob", email="bob@example.com", password="abcd")
 
-    # Crear el primero
     await services.user.register_user(user_in)
 
-    # Intentar duplicar
     with pytest.raises(UserAlreadyExistsError):
         await services.user.register_user(user_in)
 
