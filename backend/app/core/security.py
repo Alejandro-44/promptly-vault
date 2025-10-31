@@ -1,7 +1,7 @@
 import jwt
 from datetime import datetime, timedelta, timezone
 from app.core.config import settings
-from passlib.context import CryptContext
+from argon2 import PasswordHasher
 
 ALGORITHM = "HS256"
 
@@ -23,11 +23,11 @@ def decode_access_token(token: str) -> dict:
     except jwt.InvalidTokenError:
         raise ValueError("Token inválido")
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+ph = PasswordHasher()
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return ph.hash(password)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    return ph.verify(hashed_password, plain_password)
