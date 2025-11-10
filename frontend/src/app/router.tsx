@@ -4,7 +4,7 @@ import {
   Route,
 } from "react-router";
 import { RegisterPage } from "@/features/auth/pages/RegisterPage";
-import { Layout } from "@/components/Layout";
+import { Layout } from "@/common/Layout";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
