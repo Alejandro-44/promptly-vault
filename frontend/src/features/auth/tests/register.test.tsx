@@ -1,30 +1,35 @@
-// src/features/auth/tests/register.test.tsx
-import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  cleanup,
+} from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, beforeEach } from "vitest";
 import { RegisterPage } from "../pages/RegisterPage";
 import { server } from "@/tests/mocks/server";
 import { http, HttpResponse } from "msw";
 
-describe("RegisterPage", () => {
+describe("Register Page", () => {
   const queryClient = new QueryClient();
 
-  const renderWithProviders = () =>
+  beforeEach(() => {
     render(
       <QueryClientProvider client={queryClient}>
         <RegisterPage />
       </QueryClientProvider>
     );
-  
-  afterEach(cleanup)
 
-  it("allows a new user to be registered successfuly", async () => {
-    renderWithProviders();
+  });
 
-    // El formulario debe tener los campos necesarios
+  afterEach(cleanup);
+
+  it("allows a new user to be registered successfuly", async () => {    
     fireEvent.change(screen.getByLabelText(/username/i), {
-      target: { value: "nuevoUsuario" },
+      target: { value: "newUser" },
     });
+
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: "test@example.com" },
     });
@@ -32,10 +37,10 @@ describe("RegisterPage", () => {
       target: { value: "123456" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /registrarse/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Register/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/registro exitoso/i)).toBeDefined();
+      expect(screen.getByText(/Successful registration/i)).toBeDefined();
     });
   });
 
@@ -50,8 +55,6 @@ describe("RegisterPage", () => {
       )
     );
 
-    renderWithProviders();
-
     fireEvent.change(screen.getByLabelText(/username/i), {
       target: { value: "failUser" },
     });
@@ -62,10 +65,34 @@ describe("RegisterPage", () => {
       target: { value: "123456" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /registrarse/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Register/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/Email already Registered/i)).toBeDefined();
     });
+  });
+
+  it("display validation errors when data is incomplete or has wrong format", async () => {
+    // No rellenamos nada
+    fireEvent.click(screen.getByRole("button", { name: /Register/i }));
+
+    // Esperamos mensajes de validación
+    expect(
+      await screen.findByText(/The username is required/i)
+    ).toBeDefined();
+    expect(
+      screen.getByText(/The email is required/i)
+    ).toBeDefined();
+    expect(screen.getByText(/The password is required/i)).toBeDefined();
+
+    // Probamos formato inválido
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: "no-email" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Register/i }));
+
+    expect(
+      await screen.findByText(/The email is required/i)
+    ).toBeDefined();
   });
 });
