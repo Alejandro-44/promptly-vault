@@ -15,6 +15,6 @@ export const authHandlers = [
         { status: 201 }
       );
     }
-    return HttpResponse.json({ detail: "Invalid" }, { status: 400 });
+    return HttpResponse.json({ detail: "Invalid" }, { status: 409 });
   }),
 ];
