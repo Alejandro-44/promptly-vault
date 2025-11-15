@@ -1,10 +1,11 @@
 import type { User } from "@/types/api";
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 
 export const authHandlers = [
   http.post("http://localhost:8000/auth/register", async ({ request }) => {
+    await delay(150)
     const body = await request.json() as User;
-    if (body.email === "test@example.com") {
+    if (body.email !== "fail@example.com") {
       return HttpResponse.json(
         {
           id: "1",
@@ -15,6 +16,6 @@ export const authHandlers = [
         { status: 201 }
       );
     }
-    return HttpResponse.json({ detail: "Invalid" }, { status: 409 });
+    return HttpResponse.json({ detail: "Email already registered" }, { status: 409 });
   }),
 ];
