@@ -8,8 +8,6 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, it, expect, afterEach, beforeEach } from "vitest";
 import { RegisterPage } from "../pages/RegisterPage";
-import { server } from "@/tests/mocks/server";
-import { http, HttpResponse } from "msw";
 
 describe("Register Page", () => {
   const queryClient = new QueryClient();
@@ -20,12 +18,11 @@ describe("Register Page", () => {
         <RegisterPage />
       </QueryClientProvider>
     );
-
   });
 
   afterEach(cleanup);
 
-  it("allows a new user to be registered successfuly", async () => {    
+  it("allows a new user to be registered successfuly", async () => {
     fireEvent.change(screen.getByLabelText(/username/i), {
       target: { value: "newUser" },
     });
@@ -45,16 +42,6 @@ describe("Register Page", () => {
   });
 
   it("displays an error message if registration fails", async () => {
-    // Reemplazamos el handler del MSW para devolver un 409
-    server.use(
-      http.post("http://localhost:8000/auth/register", () =>
-        HttpResponse.json(
-          { detail: "Email already Registered" },
-          { status: 409 }
-        )
-      )
-    );
-
     fireEvent.change(screen.getByLabelText(/username/i), {
       target: { value: "failUser" },
     });
@@ -68,7 +55,7 @@ describe("Register Page", () => {
     fireEvent.click(screen.getByRole("button", { name: /Register/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Email already Registered/i)).toBeDefined();
+      expect(screen.getByText(/Email already registered/i)).toBeDefined();
     });
   });
 
@@ -77,12 +64,8 @@ describe("Register Page", () => {
     fireEvent.click(screen.getByRole("button", { name: /Register/i }));
 
     // Esperamos mensajes de validación
-    expect(
-      await screen.findByText(/The username is required/i)
-    ).toBeDefined();
-    expect(
-      screen.getByText(/The email is required/i)
-    ).toBeDefined();
+    expect(await screen.findByText(/The username is required/i)).toBeDefined();
+    expect(screen.getByText(/The email is required/i)).toBeDefined();
     expect(screen.getByText(/The password is required/i)).toBeDefined();
 
     // Probamos formato inválido
@@ -91,8 +74,29 @@ describe("Register Page", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: /Register/i }));
 
-    expect(
-      await screen.findByText(/The email is required/i)
-    ).toBeDefined();
+    expect(await screen.findByText(/The email is required/i)).toBeDefined();
+  });
+
+  it("muestra un indicador de carga mientras se envía el formulario", async () => {
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: "loadingUser" },
+    });
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: "loading@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: "123456" },
+    });
+
+    
+    const button = screen.getByRole("button");
+
+    fireEvent.click(button);
+
+    expect(await screen.findByText("Loading...")).toBeDefined();
+
+    await waitFor(() =>
+      expect(screen.getByText(/Successful registration/i)).toBeDefined()
+    );
   });
 });
