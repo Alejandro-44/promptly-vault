@@ -5,7 +5,7 @@ import {
 import { useRegister } from "../hooks/useRegister";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Input from "@/common/Input";
+import Input from "@/components/Input";
 
 export function RegisterPage() {
   const { mutate, isSuccess, isPending, error } = useRegister();
