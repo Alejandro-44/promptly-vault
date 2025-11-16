@@ -6,7 +6,7 @@ import {
   cleanup,
 } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RegisterPage } from "../pages/RegisterPage";
+import RegisterForm from "./RegisterForm";
 
 describe("Register Page", () => {
   const queryClient = new QueryClient();
@@ -14,7 +14,7 @@ describe("Register Page", () => {
   beforeEach(() => {
     render(
       <QueryClientProvider client={queryClient}>
-        <RegisterPage />
+        <RegisterForm />
       </QueryClientProvider>
     );
   });
