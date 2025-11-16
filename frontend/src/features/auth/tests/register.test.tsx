@@ -6,7 +6,6 @@ import {
   cleanup,
 } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { describe, it, expect, afterEach, beforeEach } from "vitest";
 import { RegisterPage } from "../pages/RegisterPage";
 
 describe("Register Page", () => {
@@ -77,7 +76,7 @@ describe("Register Page", () => {
     expect(await screen.findByText(/The email is required/i)).toBeDefined();
   });
 
-  it("muestra un indicador de carga mientras se envía el formulario", async () => {
+  it("display loading message when click on register button", async () => {
     fireEvent.change(screen.getByLabelText(/username/i), {
       target: { value: "loadingUser" },
     });
