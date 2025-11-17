@@ -1,12 +1,19 @@
 import Input from "@/components/Input";
 import { useLoginForm } from "../hooks/useLoginForm";
 import { FormProvider } from "react-hook-form";
+import { useLogin } from "../hooks/useLogin";
+import type { LoginFormValues } from "../schemas/login.schema";
 
 const LoginForm = () => {
+  const { mutate, isPending, error } = useLogin();
+  const methods = useLoginForm();
 
-  const methods = useLoginForm()
+  const onSubmit = methods.handleSubmit((data: LoginFormValues) => {
+    mutate(data);
+  });
 
-  const onSubmit = methods.handleSubmit(() => {});
+  const errorMessage =
+    (error as any)?.response?.data?.detail || "Error inesperado";
 
   return (
     <FormProvider {...methods}>
@@ -17,7 +24,10 @@ const LoginForm = () => {
         <Input type="password" name="password" placeholder="••••••••">
           Password
         </Input>
-        <button type="submit">Log In</button>
+        <button disabled={isPending} type="submit">
+          {isPending ? "Loading..." : "Log In"}
+        </button>
+        {error && <p className="text-red-600 mt-4">{errorMessage}</p>}
       </form>
     </FormProvider>
   );
