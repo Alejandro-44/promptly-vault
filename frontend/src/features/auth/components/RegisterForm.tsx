@@ -1,6 +1,6 @@
 import {
   type RegisterFormValues,
-} from "../schemas/user.schema";
+} from "../schemas/register.schema";
 import { useRegister } from "../hooks/useRegister";
 import Input from "@/components/Input";
 import { useResigerForm } from "../hooks/useRegisterForm";
