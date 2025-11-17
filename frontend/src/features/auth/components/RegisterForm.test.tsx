@@ -30,7 +30,7 @@ describe("Register Page", () => {
       target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: "123456" },
+      target: { value: "12345Test" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: /Register/i }));
@@ -48,7 +48,7 @@ describe("Register Page", () => {
       target: { value: "fail@example.com" },
     });
     fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: "123456" },
+      target: { value: "12345Test" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: /Register/i }));
@@ -84,7 +84,7 @@ describe("Register Page", () => {
       target: { value: "loading@example.com" },
     });
     fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: "123456" },
+      target: { value: "12345Test" },
     });
 
     
