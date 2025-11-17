@@ -6,7 +6,7 @@ describe("registerSchema", () => {
     const data = {
       username: "john",
       email: "john@example.com",
-      password: "1234568910",
+      password: "12345TEST",
     };
 
     const result = registerSchema.safeParse(data);
@@ -30,7 +30,7 @@ describe("registerSchema", () => {
     expect(errors.password?.[0]).toBe("The password is required");
   });
 
-  it("retorna error si el email es inválido", () => {
+  it("returns an error if the email is invalid", () => {
     const result = registerSchema.safeParse({
       username: "john",
       email: "not-an-email",
@@ -40,10 +40,10 @@ describe("registerSchema", () => {
     expect(result.success).toBe(false);
 
     const errors = (result as any).error.flatten().fieldErrors;
-    expect(errors.email?.[0]).toBe("Invalid email address");
+    expect(errors.email).toContain("Invalid email address");
   });
 
-  it("retorna error si la contraseña es demasiado corta", () => {
+  it("returns an error if the password is too short", () => {
     const result = registerSchema.safeParse({
       username: "john",
       email: "john@example.com",
@@ -53,8 +53,38 @@ describe("registerSchema", () => {
     expect(result.success).toBe(false);
 
     const errors = (result as any).error.flatten().fieldErrors;
-    expect(errors.password?.[0]).toBe(
+    expect(errors.password).toContain(
       "The password must be at least 8 characters long"
+    );
+  });
+
+  it("returns an error if the password doesn't have numbers", () => {
+    const result = registerSchema.safeParse({
+      username: "john",
+      email: "john@example.com",
+      password: "abc",
+    });
+
+    expect(result.success).toBe(false);
+
+    const errors = (result as any).error.flatten().fieldErrors;
+    expect(errors.password).toContain(
+      "Must include at least one number"
+    );
+  });
+
+  it("returns an error if the password doesn't have uppercase characters", () => {
+    const result = registerSchema.safeParse({
+      username: "john",
+      email: "john@example.com",
+      password: "abc",
+    });
+
+    expect(result.success).toBe(false);
+
+    const errors = (result as any).error.flatten().fieldErrors;
+    expect(errors.password).toContain(
+      "Must include at least one uppercase character"
     );
   });
 });

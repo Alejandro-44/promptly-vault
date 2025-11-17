@@ -21,7 +21,7 @@ export const registerSchema = z.object({
     .min(1, "The password is required")
     .min(8, "The password must be at least 8 characters long")
     .regex(/[0-9]/, "Must include at least one number")
-    .regex(/[A-Z]/, "Must include at leastone uppercase character"),
+    .regex(/[A-Z]/, "Must include at least one uppercase character"),
 });
 
 export type RegisterFormValues = z.infer<typeof registerSchema>;
