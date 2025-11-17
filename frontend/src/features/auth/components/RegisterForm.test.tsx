@@ -8,7 +8,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import RegisterForm from "./RegisterForm";
 
-describe("Register Page", () => {
+describe("Register Form", () => {
   const queryClient = new QueryClient();
 
   beforeEach(() => {
