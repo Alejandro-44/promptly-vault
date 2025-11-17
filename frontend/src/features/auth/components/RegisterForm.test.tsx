@@ -59,13 +59,12 @@ describe("Register Form", () => {
   });
 
   it("display validation errors when data is incomplete or has wrong format", async () => {
-    // No rellenamos nada
+
     fireEvent.click(screen.getByRole("button", { name: /Register/i }));
 
-    // Esperamos mensajes de validación
     expect(await screen.findByText(/The username is required/i)).toBeDefined();
-    expect(screen.getByText(/The email is required/i)).toBeDefined();
-    expect(screen.getByText(/The password is required/i)).toBeDefined();
+    expect(await screen.findByText(/The email is required/i)).toBeDefined();
+    expect(await screen.findByText(/The password is required/i)).toBeDefined();
 
     // Probamos formato inválido
     fireEvent.change(screen.getByLabelText(/email/i), {
