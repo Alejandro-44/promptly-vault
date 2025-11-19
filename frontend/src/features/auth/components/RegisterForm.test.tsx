@@ -66,7 +66,6 @@ describe("Register Form", () => {
     expect(await screen.findByText(/The email is required/i)).toBeDefined();
     expect(await screen.findByText(/The password is required/i)).toBeDefined();
 
-    // Probamos formato inválido
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: "no-email" },
     });
