@@ -24,7 +24,7 @@ const LoginForm = () => {
         <Input type="password" name="password" placeholder="••••••••">
           Password
         </Input>
-        <button disabled={isPending} type="submit">
+        <button disabled={isPending} type="submit" className="bg-black hover:bg-gray-800 text-indigo-50 rounded-2xl h-10 px-4 py-2 cursor-pointer">
           {isPending ? "Loading..." : "Log In"}
         </button>
         {error && <p className="text-red-600 mt-4">{errorMessage}</p>}
