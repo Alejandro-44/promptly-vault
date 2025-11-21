@@ -62,7 +62,7 @@ async def test_login_user_not_found(e2e_client):
         "/auth/login",
         data=test_user
     )
-    assert response.status_code == 404
+    assert response.status_code == 401
 
 
 @pytest.mark.asyncio
