@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.schemas.user_schema import UserCreate, User, Token, UpdatePassword
 from app.dependencies import UserDependency, ServicesDependency 
-from app.core.exceptions import UserAlreadyExistsError, DatabaseError, UserNotFoundError, WrongPasswordError, EmailNotRegisteredError
+from app.core.exceptions import UserAlreadyExistsError, DatabaseError, UserNotFoundError, WrongPasswordError, UnauthorizedError
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -50,7 +50,7 @@ async def login_oauth(
         )
 
         return Token(access_token=token)
-    except EmailNotRegisteredError:
+    except UnauthorizedError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials"
