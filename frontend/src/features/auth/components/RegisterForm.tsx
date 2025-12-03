@@ -1,9 +1,11 @@
-import { type RegisterFormValues } from "../schemas/register.schema";
-import { useRegister } from "../hooks/useRegister";
-import Input from "@/components/Input";
-import { useResigerForm } from "../hooks/useRegisterForm";
-import { FormProvider } from "react-hook-form";
 import { Alert, Button, Stack } from "@mui/material";
+import { CircleXIcon } from "lucide-react";
+import { FormProvider } from "react-hook-form";
+
+import Input from "@/components/Input";
+import { useRegister } from "../hooks/useRegister";
+import { useResigerForm } from "../hooks/useRegisterForm";
+import type { RegisterFormValues } from "../schemas/register.schema";
 
 const RegisterForm = () => {
   const { mutate, isSuccess, isPending, error } = useRegister();
@@ -35,10 +37,10 @@ const RegisterForm = () => {
           </Button>
           {isSuccess && (
             <Alert severity="success">
-              Here is a gentle confirmation that your action was successful.
+              Successful registration
             </Alert>
           )}
-          {error && <Alert severity="error">{errorMessage}</Alert>}
+          {error && <Alert icon={<CircleXIcon />} severity="error">{errorMessage}</Alert>}
         </Stack>
       </form>
     </FormProvider>

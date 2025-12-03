@@ -1,9 +1,11 @@
+import { Alert, Button, Stack } from "@mui/material";
+import { FormProvider } from "react-hook-form";
+import { CircleXIcon } from 'lucide-react';
+
 import Input from "@/components/Input";
 import { useLoginForm } from "../hooks/useLoginForm";
-import { FormProvider } from "react-hook-form";
 import { useLogin } from "../hooks/useLogin";
 import type { LoginFormValues } from "../schemas/login.schema";
-import { Alert, Button, Stack } from "@mui/material";
 
 const LoginForm = () => {
   const { mutate, isPending, error } = useLogin();
@@ -33,9 +35,9 @@ const LoginForm = () => {
             placeholder="••••••••"
           />
           <Button type="submit" disabled={isPending} variant="contained">
-            {isPending ? "Loading..." : "Login"}
+            {isPending ? "Loading..." : "Log In"}
           </Button>
-          {error && <Alert severity="error">{errorMessage}</Alert>}
+          {error && <Alert icon={<CircleXIcon /> } severity="error">{errorMessage}</Alert>}
         </Stack>
       </form>
     </FormProvider>
