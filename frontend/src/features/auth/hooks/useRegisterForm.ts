@@ -6,5 +6,6 @@ export function useResigerForm() {
   return useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     criteriaMode: "all",
+    mode: "all"
   });
 }
