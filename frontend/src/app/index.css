@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+:root {
+  --body-font: 'Inter Variable', sans-serif;
+  --font-size: 16px;
+}
+
 body {
   font-family: 'Inter Variable', sans-serif;
+}
+
+button.MuiButton-root {
+  font-weight: bold;
 }
