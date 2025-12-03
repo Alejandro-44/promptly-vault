@@ -3,6 +3,7 @@ import { useLoginForm } from "../hooks/useLoginForm";
 import { FormProvider } from "react-hook-form";
 import { useLogin } from "../hooks/useLogin";
 import type { LoginFormValues } from "../schemas/login.schema";
+import { Alert, Button, Stack } from "@mui/material";
 
 const LoginForm = () => {
   const { mutate, isPending, error } = useLogin();
@@ -18,16 +19,24 @@ const LoginForm = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit}>
-        <Input type="email" name="email" placeholder="youremail@example.com">
-          Email
-        </Input>
-        <Input type="password" name="password" placeholder="••••••••">
-          Password
-        </Input>
-        <button disabled={isPending} type="submit" className="bg-black hover:bg-gray-800 text-indigo-50 rounded-2xl h-10 px-4 py-2 cursor-pointer">
-          {isPending ? "Loading..." : "Log In"}
-        </button>
-        {error && <p className="text-red-600 mt-4">{errorMessage}</p>}
+        <Stack spacing={2}>
+          <Input
+            type="email"
+            name="email"
+            label="Email"
+            placeholder="youremail@example.com"
+          />
+          <Input
+            type="password"
+            name="password"
+            label="Password"
+            placeholder="••••••••"
+          />
+          <Button type="submit" disabled={isPending} variant="contained">
+            {isPending ? "Loading..." : "Login"}
+          </Button>
+          {error && <Alert severity="error">{errorMessage}</Alert>}
+        </Stack>
       </form>
     </FormProvider>
   );
