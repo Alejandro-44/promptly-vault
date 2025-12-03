@@ -24,8 +24,9 @@ export const prompts = [
 
 export const users = [
   {
-    id: 1,
-    username: "testuser",
-    email: "exmapleuser@mock.com",
+    id: "1",
+    username: "johndoe",
+    email: "johndoe@example.com",
+    is_active: true,
   },
 ];
