@@ -24,7 +24,7 @@ describe("Login Form", () => {
   it("Render the form successfuly", () => {
     expect(screen.getByLabelText(/email/i)).toBeDefined();
     expect(screen.getByLabelText(/password/i)).toBeDefined();
-    expect(screen.getByRole("button", { name: /Log in/i })).toBeDefined();
+    expect(screen.getByRole("button", { name: /Log In/i })).toBeDefined();
   });
 
   it("display errors when fields are empty or with wrong format", async () => {
