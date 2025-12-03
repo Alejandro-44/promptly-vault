@@ -1,13 +1,14 @@
 import { useFormContext } from "react-hook-form";
+import { TextField } from "@mui/material";
 
 type Props = {
-  children: React.ReactNode;
-  type: string;
   name: string;
-  placeholder: string;
+  type?: string;
+  label?: string;
+  placeholder?: string;
 };
 
-function Input({ children, type, name, placeholder }: Props) {
+function Input({ name, type, label, placeholder }: Props) {
   const {
     register,
     formState: { errors },
@@ -22,24 +23,23 @@ function Input({ children, type, name, placeholder }: Props) {
     : [];
 
   return (
-      <div>
-        <label className="text-sm font-medium" htmlFor={name}>{children}</label>
-        <input
-          id={name}
-          aria-label={name}
-          placeholder={placeholder}
-          type={type}
-          {...register(name)}
-          className="border border-gray-200 rounded w-full h-9 outline-0 p-6 text-sm placeholder:text-sm placeholder:font-medium"
-        />
-        {allErrors.length > 0 && (
-        <ul className="text-red-600 text-sm mt-1 pl-6 list-disc">
-          {allErrors.map((err, i) => (
-            <li key={i}>{err}</li>
-          ))}
-        </ul>
-      )}
-      </div>
+    <TextField
+      {...register(name)}
+      name={name}
+      type={type}
+      label={label}
+      placeholder={placeholder}
+      error={!!error}
+      helperText={
+        allErrors.length > 0 ? (
+          <>
+            {allErrors.map((err, i) => (
+              <p key={i}>{err}</p>
+            ))}
+          </>
+        ) : undefined
+      }
+    />
   );
 }
 
