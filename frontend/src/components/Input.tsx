@@ -16,6 +16,8 @@ function Input({ name, type, label, placeholder }: Props) {
 
   const error = errors[name];
 
+  console.log(errors)
+
   const allErrors: string[] = error?.types
     ? Object.values(error.types).flat()
     : error?.message
@@ -25,20 +27,13 @@ function Input({ name, type, label, placeholder }: Props) {
   return (
     <TextField
       {...register(name)}
+      sx={{ whiteSpace: "pre-line" }}
       name={name}
       type={type}
       label={label}
       placeholder={placeholder}
       error={!!error}
-      helperText={
-        allErrors.length > 0 ? (
-          <>
-            {allErrors.map((err, i) => (
-              <p key={i}>{err}</p>
-            ))}
-          </>
-        ) : undefined
-      }
+      helperText={allErrors.join("\n")}
     />
   );
 }
