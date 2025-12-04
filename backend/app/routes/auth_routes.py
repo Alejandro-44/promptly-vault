@@ -28,7 +28,7 @@ async def register(user: UserCreate, services: ServicesDependency):
 
 
 
-@router.post("/login", response_model=Token, summary="Login with form-data (OAuth2)")
+@router.post("/login", response_model=Token, summary="Login user", status_code=status.HTTP_200_OK)
 async def login_oauth(
     login: UserLogin,
     response: Response,
@@ -45,6 +45,8 @@ async def login_oauth(
             value=token,
             httponly=True,
             secure=True,      # Solo HTTPS en producción
+            samesite="lax",
+            path="/"
         )
 
         return Token(access_token=token)
@@ -55,18 +57,16 @@ async def login_oauth(
         )
 
 
-@router.post("/logout", summary="Logout", status_code=status.HTTP_204_NO_CONTENT)
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(response: Response, current_user: UserDependency):
-    """
-    Logout a user by deleting the JWT cookie
-    """
+
     response.delete_cookie(
         key="access_token",
         httponly=True,
-        secure=True,   
-        samesite="strict"
+        secure=True,      # Solo HTTPS en producción
+        samesite="lax",
+        path="/"
     )
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post("/change-password", summary="Change password", status_code=status.HTTP_204_NO_CONTENT)
