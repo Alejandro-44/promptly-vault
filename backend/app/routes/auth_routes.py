@@ -45,7 +45,6 @@ async def login_oauth(
             value=token,
             httponly=True,
             secure=True,      # Solo HTTPS en producción
-            samesite="strict" # evita CSRF básico
         )
 
         return Token(access_token=token)
