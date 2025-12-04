@@ -2,7 +2,6 @@ from typing import Annotated
 
 from fastapi import HTTPException, Request, status
 from fastapi.params import Depends
-from fastapi.security import OAuth2PasswordBearer
 from jwt import ExpiredSignatureError, PyJWTError
 
 from app.dependencies import ServicesDependency
@@ -11,19 +10,13 @@ from app.schemas.user_schema import User
 from app.core.exceptions import UserNotFoundError
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-OAuth2Dependency = Annotated[str, Depends(oauth2_scheme)]
-
 async def get_current_user(
     request: Request,
     services: ServicesDependency,
-    token: OAuth2Dependency | None = None
 ):
     cookie_token = request.cookies.get("access_token")
-    
-    token = cookie_token or token
 
-    if not token:
+    if not cookie_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token not found",
@@ -31,7 +24,7 @@ async def get_current_user(
         )
 
     try:
-        payload = decode_access_token(token)
+        payload = decode_access_token(cookie_token)
     except ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
