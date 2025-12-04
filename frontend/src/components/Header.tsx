@@ -1,3 +1,4 @@
+import { logoutUser } from "@/features/auth/api/logout";
 import { useUserStore } from "@/features/users/contexts";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { LogIn } from "lucide-react";
@@ -25,6 +26,7 @@ export const Header = () => {
             </Typography>
             <Button
               onClick={() => {
+                logoutUser();
                 useUserStore.getState().clearUser();
                 navigate("/");
               }}
