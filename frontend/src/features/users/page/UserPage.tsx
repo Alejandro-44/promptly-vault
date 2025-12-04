@@ -4,7 +4,7 @@ import UserCard from "../components/UserCard";
 export default function UserPage() {
 
   return (
-    <Container>
+    <Container sx={{ mt: 4}}>
       <UserCard />
     </Container>
   )
