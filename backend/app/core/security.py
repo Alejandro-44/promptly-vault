@@ -1,7 +1,7 @@
 import jwt
 from datetime import datetime, timedelta, timezone
 from app.core.config import settings
-from argon2 import PasswordHasher
+from argon2 import PasswordHasher, exceptions
 
 ALGORITHM = "HS256"
 
@@ -30,4 +30,7 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return ph.verify(hashed_password, plain_password)
+    try:
+        return ph.verify(hashed_password, plain_password)
+    except exceptions.VerifyMismatchError:
+        return False

@@ -4,8 +4,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router";
 import { queryClient } from "./queryClient";
 import { router } from "./router";
-
 import "@/app/index.css";
+
+import "@fontsource-variable/inter/index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

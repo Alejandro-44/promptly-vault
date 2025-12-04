@@ -18,11 +18,11 @@ async def test_register_and_create_a_prompt(e2e_client):
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     mock_prompt = {
@@ -56,11 +56,11 @@ async def test_add_prompts_and_get_prompts(e2e_client):
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     # Get mock prompts and add each one
@@ -92,11 +92,11 @@ async def test_add_prompt_and_update(e2e_client):
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     
@@ -134,11 +134,11 @@ async def test_create_and_delete_prompt(e2e_client):
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     mock_prompt =   {
@@ -180,11 +180,11 @@ async def trying_to_modify_a_prompt_that_does_not_exist_or_not_being_the_owner_r
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     mock_prompt =   {
@@ -213,11 +213,11 @@ async def trying_to_modify_a_prompt_that_does_not_exist_or_not_being_the_owner_r
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     response = await e2e_client.patch(f'/prompts/{prompt_id}', json=update_data)
@@ -234,11 +234,11 @@ async def trying_to_delete_a_prompt_that_does_not_exist_or_not_being_the_owner_r
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     mock_prompt =   {
@@ -287,11 +287,11 @@ async def test_add_commnet_to_a_prompt(e2e_client):
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     mock_prompt =   {
@@ -316,11 +316,11 @@ async def test_add_commnet_to_a_prompt(e2e_client):
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     new_comment = { "content": "It's useful!!!" }
