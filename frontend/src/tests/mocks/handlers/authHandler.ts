@@ -2,7 +2,7 @@ import type { User } from "@/types/api";
 import { delay, http, HttpResponse } from "msw";
 
 export const authHandlers = [
-  http.post("http://localhost:8000/auth/register", async ({ request }) => {
+  http.post("http://127.0.0.1:8000/auth/register", async ({ request }) => {
     await delay(150);
     const body = (await request.json()) as User;
     if (body.email !== "fail@example.com") {
@@ -21,7 +21,7 @@ export const authHandlers = [
       { status: 409 }
     );
   }),
-  http.post("http://localhost:8000/auth/login", async ({ request }) => {
+  http.post("http://127.0.0.1:8000/auth/login", async ({ request }) => {
     await delay(150);
     const body = (await request.json()) as User;
     if (body.email !== "fail@example.com") {
