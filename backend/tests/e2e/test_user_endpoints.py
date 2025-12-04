@@ -15,11 +15,11 @@ async def test_register_user_and_access_its_own_info(e2e_client):
     )
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     response = await e2e_client.get("/users/me")
@@ -38,11 +38,11 @@ async def test_user_create_prompts_and_get_only_its_own_prompts(e2e_client):
     )
 
     login_data = {
-        "username": test_user_a["email"],
+        "email": test_user_a["email"],
         "password": test_user_a["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     with open(PROMPT_MOCKS_FILE, "r", encoding="utf-8") as prompts_file:
@@ -65,11 +65,11 @@ async def test_user_create_prompts_and_get_only_its_own_prompts(e2e_client):
 
     # Login with user b, create one prompt, and should return only one prompt
     login_data = {
-        "username": test_user_b["email"],
+        "email": test_user_b["email"],
         "password": test_user_b["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     response = await e2e_client.post("/prompts/", json=mock_prompts[0])
@@ -114,11 +114,11 @@ async def test_deactivate_user(e2e_client):
     user_id = data["id"]
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
     e2e_client.cookies.set("access_token", response.cookies.get("access_token"))
 
     response = await e2e_client.delete("users/me")

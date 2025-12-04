@@ -36,11 +36,12 @@ async def test_login_flow_with_cookie(e2e_client):
     assert response.status_code == 201
 
     login_data = {
-        "username": test_user["email"],
+        "email": test_user["email"],
         "password": test_user["password"],
     }
 
-    response = await e2e_client.post("/auth/login", data=login_data)
+    response = await e2e_client.post("/auth/login", json=login_data)
+    print(response)
     assert response.status_code == 200
 
     assert "access_token" in response.cookies, "Cookie not found in request"
@@ -57,10 +58,10 @@ async def test_login_flow_with_cookie(e2e_client):
 
 @pytest.mark.asyncio
 async def test_login_user_not_found(e2e_client):
-    test_user = {"username": "ghost@example.com", "password": "xxx"}
+    test_user = {"email": "ghost@example.com", "password": "xxx"}
     response = await e2e_client.post(
         "/auth/login",
-        data=test_user
+        json=test_user
     )
     assert response.status_code == 401
 
@@ -76,7 +77,7 @@ async def test_change_password_success(e2e_client):
 
     response = await e2e_client.post(
         "/auth/login",
-        data={"username": test_user["email"], "password": test_user["password"]}
+        json={"email": test_user["email"], "password": test_user["password"]}
     )
 
     assert response.status_code == 200
