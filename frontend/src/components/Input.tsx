@@ -16,8 +16,6 @@ function Input({ name, type, label, placeholder }: Props) {
 
   const error = errors[name];
 
-  console.log(errors)
-
   const allErrors: string[] = error?.types
     ? Object.values(error.types).flat()
     : error?.message
