@@ -105,3 +105,29 @@ async def test_change_password_wrong_password(e2e_client):
         json={"old_password": "wrongpass", "new_password": "newpass"}
     )
     assert response.status_code in (401, 400)
+
+@pytest.mark.asyncio
+async def test_logout_user(e2e_client):
+    test_user = {"username": "gina", "email": "gina@example.com", "password": "logoutpass"}
+
+    await e2e_client.post("/auth/register", json=test_user)
+
+    response = await e2e_client.post(
+        "/auth/login",
+        json={"email": test_user["email"], "password": test_user["password"]}
+    )
+    assert response.status_code == 200
+
+    token = response.cookies.get("access_token")
+    assert token is not None
+
+    cookie_client = e2e_client
+    cookie_client.cookies.set("access_token", token)
+
+    response = await cookie_client.post("/auth/logout")
+    assert response.status_code == 204
+
+    delete_cookie_header = response.headers.get("set-cookie")
+    assert delete_cookie_header is not None
+    assert "Max-Age=0" in delete_cookie_header or "expires=" in delete_cookie_header.lower()
+    assert "access_token" not in response.cookies
