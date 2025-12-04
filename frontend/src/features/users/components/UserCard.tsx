@@ -1,8 +1,8 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useUserStore } from "../contexts";
 
 export default function UserCard() {
-  const { data: user } = useCurrentUser();
+  const user = useUserStore((state) => state.user);
 
   return (
     <Box>
