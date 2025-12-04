@@ -1,7 +1,6 @@
-from fastapi import APIRouter, HTTPException, Depends, status, Response
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, HTTPException, status, Response
 
-from app.schemas.user_schema import UserCreate, User, Token, UpdatePassword
+from app.schemas.user_schema import UserLogin, UserCreate, User, Token, UpdatePassword
 from app.dependencies import UserDependency, ServicesDependency 
 from app.core.exceptions import UserAlreadyExistsError, DatabaseError, UserNotFoundError, WrongPasswordError, UnauthorizedError
 
@@ -31,15 +30,15 @@ async def register(user: UserCreate, services: ServicesDependency):
 
 @router.post("/login", response_model=Token, summary="Login with form-data (OAuth2)")
 async def login_oauth(
+    login: UserLogin,
     response: Response,
-    services: ServicesDependency,
-    form_data: OAuth2PasswordRequestForm = Depends()
+    services: ServicesDependency
     ):
     """
     Login with OAuth2 a user and create a cookie with a JWT token
     """
     try:
-        token = await services.auth.login(form_data.username, form_data.password)
+        token = await services.auth.login(login.email, login.password)
     
         response.set_cookie(
             key="access_token",
