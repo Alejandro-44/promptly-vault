@@ -6,17 +6,14 @@ import Input from "@/components/Input";
 import { useLoginForm } from "../hooks/useLoginForm";
 import { useLogin } from "../hooks/useLogin";
 import type { LoginFormValues } from "../schemas/login.schema";
-import { useNavigate } from "react-router";
 
 const LoginForm = () => {
   const { mutate, isPending, error } = useLogin();
   const methods = useLoginForm();
-  const navigate = useNavigate();
 
   const onSubmit = methods.handleSubmit((data: LoginFormValues) => {
     mutate(data);
     methods.reset();
-    navigate("/user/me")
   });
 
   const errorMessage =
