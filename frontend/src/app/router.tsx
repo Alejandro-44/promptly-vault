@@ -10,7 +10,6 @@ export const router = createBrowserRouter([
     Component: Layout,
     children: [
       {
-        index: true, 
         path: "login",
         Component: LoginPage
       },
@@ -19,7 +18,7 @@ export const router = createBrowserRouter([
         Component: RegisterPage
       },
       {
-        path: "user",
+        path: "users",
         children: [
           {
             path: "me",
