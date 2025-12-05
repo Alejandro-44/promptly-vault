@@ -1,17 +1,15 @@
 // setCurrentUser.test.ts
 import { describe, it, expect } from "vitest";
-import { setCurrentUser } from "./setCurrentUser";
+import { getCurrentUser } from "./getCurrentUser";
 import { useUserStore } from "../contexts";
 
-describe("setCurrentUser", () => {
+describe("getCurrentUser", () => {
   afterEach(() => {
     useUserStore.setState({ user: null });
   });
 
-  it("should fetch /users/me and store user in Zustand", async () => {
-    await setCurrentUser();
-
-    const user = useUserStore.getState().user;
+  it("should fetch /users/me and return the user data", async () => {
+    const user = await getCurrentUser();
 
     expect(user).toEqual({
       id: "1",
