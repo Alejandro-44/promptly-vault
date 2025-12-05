@@ -6,17 +6,12 @@ import {
   waitFor,
 } from "@testing-library/react";
 import LoginForm from "./LoginForm";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { renderWithProviders } from "@/tests/utils/renderWithProviders";
 
 describe("Login Form", () => {
-  const queryClient = new QueryClient();
 
   beforeEach(() => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <LoginForm />
-      </QueryClientProvider>
-    );
+    renderWithProviders(<LoginForm />);
   });
 
   afterEach(cleanup);
@@ -41,7 +36,7 @@ describe("Login Form", () => {
     expect(await screen.findByText(/Invalid email address/i)).toBeDefined();
   });
 
-  it("", async () => {
+  it("Display loading state while submitting", async () => {
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: "user@example.com" },
     });
@@ -53,8 +48,6 @@ describe("Login Form", () => {
 
     expect(await screen.findByText(/Loading/i)).toBeDefined();
 
-    await waitFor(() =>
-      expect(screen.queryByText(/Loaging/i)).toBeNull()
-    );
+    await waitFor(() => expect(screen.queryByText(/Loaging/i)).toBeNull());
   });
 });
