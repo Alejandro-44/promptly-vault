@@ -1,6 +1,5 @@
 import {
   screen,
-  render,
   fireEvent,
   cleanup,
   waitFor,

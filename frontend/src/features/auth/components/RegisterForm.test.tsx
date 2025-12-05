@@ -1,22 +1,16 @@
 import {
-  render,
   screen,
   fireEvent,
   waitFor,
   cleanup,
 } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import RegisterForm from "./RegisterForm";
+import { renderWithProviders } from "@/tests/utils/renderWithProviders";
 
 describe("Register Form", () => {
-  const queryClient = new QueryClient();
 
   beforeEach(() => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <RegisterForm />
-      </QueryClientProvider>
-    );
+    renderWithProviders(<RegisterForm />);
   });
 
   afterEach(cleanup);
