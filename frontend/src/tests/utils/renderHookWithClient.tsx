@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 
 export function renderHookWithClient(callback: () => any) {
   const client = new QueryClient();
@@ -7,7 +8,7 @@ export function renderHookWithClient(callback: () => any) {
   return renderHook(callback, {
     wrapper: ({ children }) => (
       <QueryClientProvider client={client}>
-        {children}
+        <MemoryRouter>{children}</MemoryRouter>
       </QueryClientProvider>
     ),
   });
