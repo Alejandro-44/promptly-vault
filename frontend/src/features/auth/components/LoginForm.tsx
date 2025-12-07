@@ -4,7 +4,7 @@ import { CircleXIcon } from "lucide-react";
 
 import Input from "@/components/Input";
 import { useLoginForm } from "../hooks/useLoginForm";
-import { useLogin } from "../hooks/useLogin";
+import { useLogin } from "../hooks/useAuth";
 import type { LoginFormValues } from "../schemas/login.schema";
 
 const LoginForm = () => {

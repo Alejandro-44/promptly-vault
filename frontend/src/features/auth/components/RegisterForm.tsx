@@ -3,7 +3,7 @@ import { CircleXIcon } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 
 import Input from "@/components/Input";
-import { useRegister } from "../hooks/useRegister";
+import { useRegister } from "../hooks/useAuth";
 import { useResigerForm } from "../hooks/useRegisterForm";
 import type { RegisterFormValues } from "../schemas/register.schema";
 
