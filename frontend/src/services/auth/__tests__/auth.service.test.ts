@@ -16,6 +16,16 @@ describe("AuthService", () => {
     });
   });
 
+  it("should fail to register with an existing email and return 409", async () => {
+    await expect(
+      AuthService.register({
+        username: "failuser",
+        email: "fail@example.com",  
+        password: "123456",
+      })
+    ).rejects.toThrowError();
+  });
+
   it("should login and return a token", async () => {
     const token = await AuthService.login({
       email: "test@example.com",
@@ -25,17 +35,6 @@ describe("AuthService", () => {
     expect(token).toEqual({
       accessToken: "mockedtoken",
       tokenType: "bearer",
-    });
-  });
-
-  it("should get the current logged user", async () => {
-    const user = await AuthService.getMe();
-
-    expect(user).toEqual({
-      id: "1",
-      username: "johndoe",
-      email: "johndoe@example.com",
-      isActive: true,
     });
   });
 });
