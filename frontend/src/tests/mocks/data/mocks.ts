@@ -38,4 +38,10 @@ export const users = [
     email: "johndoe@example.com",
     is_active: true,
   },
+  {
+    id: "2",
+    username: "janedoe",
+    email: "janedoe@example.com",
+    is_active: true,
+  }
 ];
