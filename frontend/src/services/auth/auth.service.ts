@@ -5,11 +5,11 @@ import type {
   UpdatePasswordDTO,
   TokenDTO,
 } from "./auth.dto";
-import type { UserDTO } from "../users/user.dto";
+import type { UserDTO } from "../users/users.dto";
 
 import { authMapper } from "./auth.mapper";
-import { userMapper } from "../users/user.mapper";
-import type { User } from "../users/user.model";
+import { userMapper } from "../users/users.mapper";
+import type { User } from "../users/users.model";
 import type { Token } from "./auth.model";
 
 export class AuthService {
@@ -30,14 +30,5 @@ export class AuthService {
 
   static async changePassword(data: UpdatePasswordDTO): Promise<void> {
     await httpClient.post<void>("/auth/change-password", data);
-  }
-
-  static async getMe(): Promise<User> {
-    const response = await httpClient.get<UserDTO>("/users/me");
-    return userMapper.toUser(response);
-  }
-
-  static async deleteMe(): Promise<void> {
-    await httpClient.delete<void>("/users/me");
   }
 }
