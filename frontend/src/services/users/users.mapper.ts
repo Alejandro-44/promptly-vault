@@ -1,5 +1,5 @@
-import type { UserDTO } from "./user.dto";
-import type { User } from "./user.model";
+import type { UserDTO } from "./users.dto";
+import type { User } from "./users.model";
 
 export const userMapper = {
   toUser: (dto: UserDTO): User => ({
