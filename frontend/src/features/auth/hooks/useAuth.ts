@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
-import { AuthService } from "@/services/auth/auth.service";
+import { AuthService, UsersService } from "@/services";
 import type {
   UserCreateDTO,
   UserLoginDTO,
@@ -18,7 +18,7 @@ export const authKeys = {
 export function useMe() {
   return useQuery<User>({
     queryKey: authKeys.me,
-    queryFn: () => AuthService.getMe(),
+    queryFn: () => UsersService.getMe(),
     retry: false,
   });
 }
@@ -29,7 +29,7 @@ export function useRegister() {
   return useMutation<User, Error, UserCreateDTO>({
     mutationFn: (data) => AuthService.register(data),
     onSuccess: () => {
-      navigate("/login")
+      navigate("/login");
     },
   });
 }
@@ -41,9 +41,9 @@ export function useLogin() {
   return useMutation<Token, Error, UserLoginDTO>({
     mutationFn: (data) => AuthService.login(data),
     onSuccess: async () => {
-      const user = await AuthService.getMe();
+      const user = await UsersService.getMe();
       setUser(user);
-      navigate("/users/me")
+      navigate("/users/me");
     },
   });
 }
@@ -56,7 +56,7 @@ export function useLogout() {
     mutationFn: () => AuthService.logout(),
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: authKeys.me });
-      navigate("/")
+      navigate("/");
     },
   });
 }
