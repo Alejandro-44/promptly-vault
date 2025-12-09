@@ -29,7 +29,7 @@ async def register(user: UserCreate, services: ServicesDependency):
 
 
 @router.post("/login", response_model=Token, summary="Login user", status_code=status.HTTP_200_OK)
-async def login_oauth(
+async def login(
     login: UserLogin,
     response: Response,
     services: ServicesDependency

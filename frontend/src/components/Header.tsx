@@ -1,4 +1,4 @@
-import { logoutUser } from "@/features/auth/api/logout";
+import { useLogout } from "@/features/auth/hooks/useAuth";
 import { useUserStore } from "@/features/users/contexts";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { LogIn } from "lucide-react";
@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router";
 
 export const Header = () => {
   const navigate = useNavigate();
+  const { mutate: logoutUser } = useLogout();
   const user = useUserStore((state) => state.user);
   return (
     <AppBar position="relative">

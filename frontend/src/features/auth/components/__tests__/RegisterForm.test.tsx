@@ -1,27 +1,20 @@
 import {
-  render,
   screen,
   fireEvent,
   waitFor,
   cleanup,
 } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import RegisterForm from "./RegisterForm";
+import RegisterForm from "../RegisterForm";
+import { renderWithProviders } from "@/tests/utils/renderWithProviders";
 
 describe("Register Form", () => {
-  const queryClient = new QueryClient();
-
   beforeEach(() => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <RegisterForm />
-      </QueryClientProvider>
-    );
+    renderWithProviders(<RegisterForm />);
   });
 
   afterEach(cleanup);
 
-  it("allows a new user to be registered successfuly", async () => {
+  it("allows a new user to be registered successfuly and navigates to login page", async () => {
     fireEvent.change(screen.getByLabelText(/username/i), {
       target: { value: "newUser" },
     });
@@ -36,7 +29,7 @@ describe("Register Form", () => {
     fireEvent.click(screen.getByRole("button", { name: /Register/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Successful registration/i)).toBeDefined();
+      expect(screen.getByText(/Login page/i)).toBeDefined();
     });
   });
 
@@ -93,7 +86,7 @@ describe("Register Form", () => {
     expect(await screen.findByText("Loading...")).toBeDefined();
 
     await waitFor(() =>
-      expect(screen.getByText(/Successful registration/i)).toBeDefined()
+      expect(screen.getByText(/Login page/i)).toBeDefined()
     );
   });
 });

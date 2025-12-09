@@ -3,12 +3,12 @@ import { CircleXIcon } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 
 import Input from "@/components/Input";
-import { useRegister } from "../hooks/useRegister";
+import { useRegister } from "../hooks/useAuth";
 import { useResigerForm } from "../hooks/useRegisterForm";
 import type { RegisterFormValues } from "../schemas/register.schema";
 
 const RegisterForm = () => {
-  const { mutate, isSuccess, isPending, error } = useRegister();
+  const { mutate, isPending, error } = useRegister();
   const methods = useResigerForm();
   const onSubmit = methods.handleSubmit((data: RegisterFormValues) => {
     mutate(data);
@@ -35,11 +35,6 @@ const RegisterForm = () => {
           <Button type="submit" variant="contained" disabled={isPending}>
             {isPending ? "Loading..." : "Register"}
           </Button>
-          {isSuccess && (
-            <Alert severity="success">
-              Successful registration
-            </Alert>
-          )}
           {error && <Alert icon={<CircleXIcon />} severity="error">{errorMessage}</Alert>}
         </Stack>
       </form>

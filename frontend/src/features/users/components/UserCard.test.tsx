@@ -1,15 +1,19 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, screen, waitFor } from "@testing-library/react";
 import UserCard from "./UserCard";
-import { queryClient } from "@/app/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { renderWithProviders } from "@/tests/utils/renderWithProviders";
+import { useUserStore } from "../contexts";
 
 describe("UserCard", () => {
   beforeEach(() => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <UserCard />
-      </QueryClientProvider>
-    );
+    useUserStore.setState({
+      user: {
+        id: "1",
+        email: "johndoe@example.com",
+        username: "johndoe",
+        is_active: true,
+      },
+    });
+    renderWithProviders(<UserCard />);
   });
 
   afterEach(() => {

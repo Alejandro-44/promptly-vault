@@ -1,4 +1,4 @@
-import type { User } from "@/types/api";
+import type { User } from "@/services";
 import { delay, http, HttpResponse } from "msw";
 
 export const authHandlers = [
