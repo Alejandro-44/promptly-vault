@@ -4,7 +4,7 @@ import {
   cleanup,
   waitFor,
 } from "@testing-library/react";
-import LoginForm from "./LoginForm";
+import LoginForm from "../LoginForm";
 import { renderWithProviders } from "@/tests/utils/renderWithProviders";
 
 describe("Login Form", () => {

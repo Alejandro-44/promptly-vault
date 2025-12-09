@@ -4,7 +4,7 @@ import {
   waitFor,
   cleanup,
 } from "@testing-library/react";
-import RegisterForm from "./RegisterForm";
+import RegisterForm from "../RegisterForm";
 import { renderWithProviders } from "@/tests/utils/renderWithProviders";
 
 describe("Register Form", () => {
