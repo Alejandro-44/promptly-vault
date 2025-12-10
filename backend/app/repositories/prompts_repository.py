@@ -13,16 +13,18 @@ class PromptsRepository:
         if filters:
             mongo_filters = {}
 
-        if "user_id" in filters:
-            mongo_filters["user_id"] = ObjectId(filters["user_id"])
+            if "user_id" in filters:
+                mongo_filters["user_id"] = ObjectId(filters["user_id"])
 
-        if "tags" in filters:
-            mongo_filters["tags"] = { "$in": filters["tags"] }
+            if "tags" in filters:
+                mongo_filters["tags"] = { "$in": filters["tags"] }
 
-        if "model" in filters:
-            mongo_filters["model"] = filters["model"]
+            if "model" in filters:
+                mongo_filters["model"] = filters["model"]
 
-        pipeline.append({ "$match": mongo_filters })
+            pipeline.append({ "$match": mongo_filters })
+
+        
         pipeline.extend([
             {
                 "$lookup": {
@@ -49,7 +51,25 @@ class PromptsRepository:
         return await cursor.to_list()
 
     async def get_by_id(self, prompt_id: str) -> Prompt:
-        return await self.__collection.find_one({ "_id": ObjectId(prompt_id) })
+        pipeline = [
+            {
+                "$match": {
+                    "_id": ObjectId(prompt_id)
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "user_id",
+                    "foreignField": "_id",
+                    "as": "author"
+                }
+            },
+            { "$unwind": "$author" },
+        ]
+
+        cursor = await self.__collection.aggregate(pipeline)
+        return await cursor.to_list()
 
     async def create(self, prompt_data: dict) -> str:
         result = await self.__collection.insert_one(prompt_data)
