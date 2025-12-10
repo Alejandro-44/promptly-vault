@@ -1,7 +1,7 @@
 import { cleanup, screen, waitFor } from "@testing-library/react";
-import UserCard from "./UserCard";
+import UserCard from "../UserCard";
 import { renderWithProviders } from "@/tests/utils/renderWithProviders";
-import { useUserStore } from "../contexts";
+import { useUserStore } from "@/features/users/contexts";
 
 describe("UserCard", () => {
   beforeEach(() => {

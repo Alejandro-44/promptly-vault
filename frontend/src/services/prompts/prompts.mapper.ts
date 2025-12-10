@@ -10,6 +10,7 @@ export const promptsMapper = {
     model: dto.model,
     tags: dto.tags,
     userId: dto.user_id,
+    user: dto.user,
     pubDate: new Date(dto.pub_date),
   }),
 }

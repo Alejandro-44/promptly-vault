@@ -7,6 +7,7 @@ export const prompts = [
     model: "gpt-4",
     tags: ["marketing", "copywriting", "saas"],
     user_id: "1",
+    user: "johndoe",
     pub_date: "2024-01-15T10:30:00Z",
   },
   {
@@ -17,6 +18,7 @@ export const prompts = [
     model: "gpt-4o",
     tags: ["javascript", "refactor", "programming"],
     user_id: "1",
+    user: "johndoe",
     pub_date: "2024-02-02T16:45:00Z",
   },
   {
@@ -27,6 +29,7 @@ export const prompts = [
     model: "gpt-3.5",
     tags: ["storytelling", "writing", "fantasy"],
     user_id: "1",
+    user: "johndoe",
     pub_date: "2024-02-10T08:12:00Z",
   },
 ];
