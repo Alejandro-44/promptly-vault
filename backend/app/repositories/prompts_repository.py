@@ -8,8 +8,30 @@ class PromptsRepository:
     def __init__(self, database):
         self.__collection: Collection[Prompt] = database["prompts"]
 
-    async def get(self, filters: dict = {}) -> list[Prompt]:
-        return await self.__collection.find(filters).to_list()
+    async def get_summary(self) -> list[Prompt]:
+        pipeline = [
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "user_id",
+                    "foreignField": "_id",
+                    "as": "author"
+                }
+            },
+            { "$unwind": "$author" },
+            {
+                "$project": {
+                    "_id": 1,
+                    "title": 1,
+                    "tags": 1,
+                    "model": 1,
+                    "pub_date": 1,
+                    "author_name": "$author.username"
+                }
+            }
+        ]
+        cursor = await self.__collection.aggregate(pipeline)
+        return await cursor.to_list()
 
     async def get_by_id(self, prompt_id: str) -> Prompt:
         return await self.__collection.find_one({ "_id": ObjectId(prompt_id) })
