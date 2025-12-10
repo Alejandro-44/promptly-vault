@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import HTTPException, Request, status
 from fastapi.params import Depends
-from jwt import ExpiredSignatureError, PyJWTError
+from jwt import ExpiredSignatureError, PyJWTError, InvalidTokenError
 
 from app.dependencies import ServicesDependency
 from app.core.security import decode_access_token
@@ -29,6 +29,12 @@ async def get_current_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except InvalidTokenError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token expired",
             headers={"WWW-Authenticate": "Bearer"},
         )
     except PyJWTError:
