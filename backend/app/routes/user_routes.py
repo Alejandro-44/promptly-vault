@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
 from app.dependencies import UserDependency, ServicesDependency
-from app.schemas.prompt_schema import Prompt
+from app.schemas.prompt_schema import PromptSumary
 from app.schemas.user_schema import User
 
 
@@ -16,7 +16,7 @@ async def get_me(current_user: UserDependency):
     return current_user
 
 
-@router.get("/me/prompts", response_model=list[Prompt], summary="Get my prompts")
+@router.get("/me/prompts", response_model=list[PromptSumary], summary="Get my prompts")
 async def get_my_prompts(current_user: UserDependency, service: ServicesDependency):
     """
     Get prompts created by the current user
