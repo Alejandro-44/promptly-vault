@@ -19,7 +19,7 @@ class PromptsService:
         return self.process_prompt_documents(prompt_documents)
 
     async def get_by_user(self, user_id: dict):
-        prompt_documents = await self.__prompts_repo.get({ "user_id": ObjectId(user_id) })
+        prompt_documents = await self.__prompts_repo.get_summary({ "user_id": ObjectId(user_id) })
         return self.process_prompt_documents(prompt_documents)
     
     async def get_by_id(self, prompt_id: str):

@@ -8,8 +8,22 @@ class PromptsRepository:
     def __init__(self, database):
         self.__collection: Collection[Prompt] = database["prompts"]
 
-    async def get_summary(self) -> list[Prompt]:
-        pipeline = [
+    async def get_summary(self, filters: dict | None = None) -> list[Prompt]:
+        pipeline = []
+        if filters:
+            mongo_filters = {}
+
+        if "user_id" in filters:
+            mongo_filters["user_id"] = ObjectId(filters["user_id"])
+
+        if "tags" in filters:
+            mongo_filters["tags"] = { "$in": filters["tags"] }
+
+        if "model" in filters:
+            mongo_filters["model"] = filters["model"]
+
+        pipeline.append({ "$match": mongo_filters })
+        pipeline.extend([
             {
                 "$lookup": {
                     "from": "users",
@@ -29,7 +43,8 @@ class PromptsRepository:
                     "author_name": "$author.username"
                 }
             }
-        ]
+        ])
+
         cursor = await self.__collection.aggregate(pipeline)
         return await cursor.to_list()
 
