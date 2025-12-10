@@ -16,7 +16,7 @@ class PromptCreate(PromptBase):
 
 
 class Prompt(PromptBase):
-    id: Optional[str] = None
+    id: str
     user_id: str
     pub_date: datetime
 
@@ -40,3 +40,21 @@ class PromptUpdate(BaseModel):
     result_example: Optional[str] = None
     model: Optional[str] = None
     tags: Optional[List[str]] = None
+
+class PromptSumary(BaseModel):
+    id: str
+    title: str
+    tags: List[str]
+    model: str
+    pub_date: datetime
+    author_name: str
+    @staticmethod
+    def from_document(document):
+        return PromptSumary(
+            id=str(document["_id"]),
+            title=document["title"],
+            tags=document.get("tags", []),
+            model=document["model"],
+            pub_date=document["pub_date"],
+            author_name=document["author_name"]
+        )

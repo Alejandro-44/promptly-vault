@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 
 from app.dependencies import ServicesDependency, UserDependency
-from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate
+from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate, PromptSumary
 from app.schemas.comment_schema import Comment, CommentCreate
 from app.core.exceptions import PromptNotFoundError, DatabaseError, CommentNotFoundError
 
@@ -9,9 +9,9 @@ from app.core.exceptions import PromptNotFoundError, DatabaseError, CommentNotFo
 router = APIRouter(prefix="/prompts", tags=["Prompts"])
 
 
-@router.get("/", response_model=list[Prompt], status_code=status.HTTP_200_OK)
+@router.get("/", response_model=list[PromptSumary], status_code=status.HTTP_200_OK)
 async def get_prompts(services: ServicesDependency):
-    return await services.prompts.get_all();
+    return await services.prompts.get_summary()
 
 
 @router.get("/{prompt_id}", response_model=Prompt, status_code=status.HTTP_200_OK)

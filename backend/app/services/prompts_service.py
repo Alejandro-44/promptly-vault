@@ -3,7 +3,7 @@ from datetime import datetime
 from bson import ObjectId
 
 from app.repositories.prompts_repository import PromptsRepository
-from app.schemas.prompt_schema import PromptCreate, PromptUpdate, Prompt
+from app.schemas.prompt_schema import PromptCreate, PromptUpdate, Prompt, PromptSumary
 from app.core.exceptions import PromptNotFoundError, DatabaseError
 
 class PromptsService:
@@ -11,11 +11,11 @@ class PromptsService:
     def __init__(self, prompts_repo: PromptsRepository):
         self.__prompts_repo = prompts_repo
 
-    def process_prompt_documents(self, prompt_documents) -> list[Prompt]:
-        return [Prompt.from_document(document) for document in prompt_documents]
+    def process_prompt_documents(self, prompt_documents) -> list[PromptSumary]:
+        return [PromptSumary.from_document(document) for document in prompt_documents]
 
-    async def get_all(self):
-        prompt_documents = await self.__prompts_repo.get()
+    async def get_summary(self):
+        prompt_documents = await self.__prompts_repo.get_summary()
         return self.process_prompt_documents(prompt_documents)
 
     async def get_by_user(self, user_id: dict):
