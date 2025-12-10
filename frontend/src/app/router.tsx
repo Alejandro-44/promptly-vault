@@ -27,6 +27,15 @@ export const router = createBrowserRouter([
             Component: UserPage
           }
         ]
+      },
+      {
+        path: "prompts",
+        children: [
+          {
+            path: ":id",
+            Component: () => <div>Prompt Detail Page</div>
+          }
+        ]
       }
     ],
   },
