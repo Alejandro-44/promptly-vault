@@ -1,7 +1,9 @@
 from typing import List, Optional
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+
+from .user_schema import User
 
 class PromptBase(BaseModel):
     title: str
@@ -17,8 +19,8 @@ class PromptCreate(PromptBase):
 
 class Prompt(PromptBase):
     id: str
-    user_id: str
     pub_date: datetime
+    author: User
 
     @staticmethod
     def from_document(document):
@@ -29,8 +31,8 @@ class Prompt(PromptBase):
             result_example=document["result_example"],
             model=document["model"],
             tags=document.get("tags", []),
-            user_id=str(document["user_id"]),
             pub_date=document["pub_date"],
+            author=User.from_document(document["author"])
         )
 
 

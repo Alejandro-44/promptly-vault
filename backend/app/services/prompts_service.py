@@ -27,7 +27,7 @@ class PromptsService:
         if not prompt_document:
             raise PromptNotFoundError()
 
-        return Prompt.from_document(prompt_document)
+        return Prompt.from_document(prompt_document[0])
 
     async def create(self, user_id: str, prompt_in: PromptCreate):
         prompt_data = prompt_in.model_dump()
