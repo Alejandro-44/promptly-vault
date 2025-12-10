@@ -38,4 +38,9 @@ export const authHandlers = [
       { status: 401 }
     );
   }),
+
+  http.post("http://127.0.0.1:8000/auth/logout", async () => {
+    await delay(100);
+    return HttpResponse.json({}, { status: 204 });
+  }),
 ];
