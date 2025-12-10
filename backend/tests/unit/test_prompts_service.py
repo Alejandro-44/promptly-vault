@@ -16,13 +16,13 @@ def service(service_factory):
 
 
 @pytest.mark.asyncio
-async def test_get_all(service, mock_repo, mocker):
-    mock_repo.get.return_value = [{"title": "T1"}, {"title": "T2"}]
+async def test_get_summary(service, mock_repo, mocker):
+    mock_repo.get_summary.return_value = [{"title": "T1"}, {"title": "T2"}]
     mocker.patch("app.schemas.prompt_schema.Prompt.from_document", side_effect=lambda x: x)
 
-    result = await service.get_all()
-
-    mock_repo.get.assert_awaited_once_with()
+    result = await service.get_summary()
+    mock_repo.get_summary.assert_awaited_once_with()
+    
     assert result == [{"title": "T1"}, {"title": "T2"}]
 
 

@@ -36,7 +36,7 @@ async def test_prompt_lifecycle(db):
     assert updated_prompt["title"] == "Updated title"
 
     # --- GET ALL ---
-    prompts = await repo.get()
+    prompts = await repo.get_summary()
     assert len(prompts) == 1
     assert prompts[0]["_id"] == ObjectId(inserted_id)
 
