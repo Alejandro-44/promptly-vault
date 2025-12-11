@@ -11,8 +11,8 @@ async def test_register_user_success(e2e_client):
 
     assert response.status_code == 201
     data = response.json()
-    assert data["email"] == test_user["email"]
     assert "id" in data
+    assert "username" in data
 
 
 @pytest.mark.asyncio
@@ -41,7 +41,6 @@ async def test_login_flow_with_cookie(e2e_client):
     }
 
     response = await e2e_client.post("/auth/login", json=login_data)
-    print(response)
     assert response.status_code == 200
 
     assert "access_token" in response.cookies, "Cookie not found in request"
@@ -53,7 +52,7 @@ async def test_login_flow_with_cookie(e2e_client):
     assert response.status_code == 200
     data = response.json()
 
-    assert data["email"] == test_user["email"]
+    assert data["username"] == test_user["username"]
 
 
 @pytest.mark.asyncio

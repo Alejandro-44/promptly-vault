@@ -9,11 +9,11 @@ async def test_register_and_get_user(services):
     user_in = UserCreate(username="Alice", email="alice@example.com", password="1234")
 
     user = await services.user.register_user(user_in)
-    assert user.email == "alice@example.com"
+    assert user.username == "Alice"
 
     found = await services.user.get_by_id(user.id)
     assert found.username == "Alice"
-    assert found.is_active
+    assert found.is_active is True
 
 
 @pytest.mark.asyncio

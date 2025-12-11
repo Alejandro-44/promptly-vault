@@ -6,7 +6,6 @@ from app.repositories.user_repository import UserRepository
 from app.core.exceptions import UserNotFoundError, UserAlreadyExistsError, DatabaseError
 
 class UserService:
-
     def __init__(self, user_repo: UserRepository):
         self.__user_repo = user_repo
     
@@ -25,7 +24,6 @@ class UserService:
             return User(
                 id=str(user_doc["_id"]),
                 username="deleted user",
-                email="deleted@deleted.com",
                 is_active=False
             )
 
@@ -42,6 +40,8 @@ class UserService:
             "hashed_password": hash_password(user_in.password),
             "is_active": True,
         }
+
+        new_user_id = None
 
         try:
             new_user_id = await self.__user_repo.create(new_user)
