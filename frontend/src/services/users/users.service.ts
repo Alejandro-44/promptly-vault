@@ -2,9 +2,9 @@ import { httpClient } from "../api/httpClient";
 import type { UserDTO } from "./users.dto";
 import type { User } from "./users.model";
 import { userMapper } from "./users.mapper";
-import type { Prompt } from "../prompts/prompts.model";
-import type { PromptDTO } from "../prompts/prompts.dto";
-import { promptsMapper } from "../prompts/prompts.mapper";
+import type { Prompt, PromptSummary } from "../prompts/prompts.model";
+import type { PromptDTO, PromptSummaryDTO } from "../prompts/prompts.dto";
+import { promptsMapper, promptSummaryMapper } from "../prompts/prompts.mapper";
 
 export class UsersService {
   static async getMe(): Promise<User> {
@@ -16,9 +16,9 @@ export class UsersService {
     await httpClient.delete("/users/me");
   }
 
-  static async getMyPrompts(): Promise<Prompt[]> {
-    const data = await httpClient.get<PromptDTO[]>("/users/me/prompts");
-    return data.map(promptsMapper.toPrompt);
+  static async getMyPrompts(): Promise<PromptSummary[]> {
+    const data = await httpClient.get<PromptSummaryDTO[]>("/users/me/prompts");
+    return data.map(promptSummaryMapper.toPromptSummary);
   }
 
   static async getUserById(userId: string): Promise<User> {
