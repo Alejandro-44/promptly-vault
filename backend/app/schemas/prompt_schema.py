@@ -43,7 +43,7 @@ class PromptUpdate(BaseModel):
     model: Optional[str] = None
     tags: Optional[List[str]] = None
 
-class PromptSumary(BaseModel):
+class PromptSummary(BaseModel):
     id: str
     title: str
     tags: List[str]
@@ -52,7 +52,7 @@ class PromptSumary(BaseModel):
     author_name: str
     @staticmethod
     def from_document(document):
-        return PromptSumary(
+        return PromptSummary(
             id=str(document["_id"]),
             title=document["title"],
             tags=document.get("tags", []),
