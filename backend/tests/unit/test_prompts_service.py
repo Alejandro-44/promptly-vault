@@ -3,7 +3,7 @@ from bson import ObjectId
 
 from app.services.prompts_service import PromptsService
 from app.core.exceptions import PromptNotFoundError, DatabaseError
-from app.schemas.prompt_schema import PromptCreate, PromptUpdate
+from app.schemas.prompt_schema import PromptCreate, PromptUpdate, PromptSummary, Prompt
 
 MOCK_PROMPT_ID = "507f1f77bcf86cd799439011"
 MOCK_USER_ID = "507f1f77bcf86cd799439012"
@@ -16,41 +16,80 @@ def service(service_factory):
 
 
 @pytest.mark.asyncio
-async def test_get_summary(service, mock_repo, mocker):
-    mock_repo.get_summary.return_value = [{"title": "T1"}, {"title": "T2"}]
-    mocker.patch("app.schemas.prompt_schema.Prompt.from_document", side_effect=lambda x: x)
+async def test_get_summary(service, mock_repo):
+    mock_repo.get_summary.return_value = [
+        {
+            "_id": ObjectId(),
+            "title": "Test Prompt",
+            "tags": ["tag1"],
+            "model": "gpt-4",
+            "pub_date": "2024-01-01T00:00:00Z",
+            "author_name": "user1"
+        },
+        {
+            "_id": ObjectId(),
+            "title": "Test Prompt 2",
+            "tags": ["tag2"],
+            "model": "gpt-3.5",
+            "pub_date": "2024-01-02T00:00:00Z",
+            "author_name": "user2"
+        }
+    ]
 
     result = await service.get_summary()
     mock_repo.get_summary.assert_awaited_once_with()
     
-    assert result == [{"title": "T1"}, {"title": "T2"}]
+    assert len(result) == 2
+    for prompt in result:
+        PromptSummary.model_validate(prompt)
 
 
 @pytest.mark.asyncio
-async def test_get_by_user(service, mock_repo, mocker):
-    mock_repo.get.return_value = [{"user_id": ObjectId(MOCK_USER_ID)}]
-    mocker.patch("app.schemas.prompt_schema.Prompt.from_document", side_effect=lambda x: x)
+async def test_get_by_user(service, mock_repo):
+    mock_repo.get_summary.return_value = [
+        {
+            "_id": ObjectId(MOCK_USER_ID),
+            "title": "Test Prompt",
+            "tags": ["tag1"],
+            "model": "gpt-4",
+            "pub_date": "2024-01-01T00:00:00Z",
+            "author_name": "testuser"
+        }
+    ]
 
     result = await service.get_by_user(MOCK_USER_ID)
 
-    mock_repo.get.assert_awaited_once_with({"user_id": ObjectId(MOCK_USER_ID)})
-    assert result[0]["user_id"] == ObjectId(MOCK_USER_ID)
+    mock_repo.get_summary.assert_awaited_once_with({"user_id": ObjectId(MOCK_USER_ID)})
+    assert result[0].author_name == "testuser"
 
 
 @pytest.mark.asyncio
 async def test_get_by_id_found(service, mock_repo, mocker):
-    mock_repo.get_by_id.return_value = {"_id": ObjectId(MOCK_PROMPT_ID)}
-    mocker.patch("app.schemas.prompt_schema.Prompt.from_document", side_effect=lambda prompt: str(prompt["_id"]))
+    mock_repo.get_by_id.return_value = [
+        {
+            "_id": ObjectId(MOCK_PROMPT_ID),
+            "title": "Test Prompt",
+            "prompt": "Do something",
+            "result_example": "Example",
+            "model": "gpt-4",
+            "tags": ["tag1"],
+            "pub_date": "2024-01-01T00:00:00Z",
+            "author": {
+                "_id": ObjectId(MOCK_USER_ID),
+                "username": "user",
+                "email": "user@example.com",
+                "is_active": True
+            }
+        }
+    ]
 
     result = await service.get_by_id(MOCK_PROMPT_ID)
-
-    mock_repo.get_by_id.assert_awaited_once_with(MOCK_PROMPT_ID)
-    assert result == MOCK_PROMPT_ID
+    Prompt.model_validate(result)
 
 
 @pytest.mark.asyncio
 async def test_get_by_id_not_found(service, mock_repo):
-    mock_repo.get_by_id.return_value = None
+    mock_repo.get_by_id.return_value = []
 
     with pytest.raises(PromptNotFoundError):
         await service.get_by_id(MOCK_RANDOM_ID)

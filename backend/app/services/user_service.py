@@ -11,7 +11,10 @@ class UserService:
         self.__user_repo = user_repo
     
     async def get_by_email(self, email: str) -> Optional[User]:
-        return await self.__user_repo.get_by_email(email)
+        user = await self.__user_repo.get_by_email(email)
+        if not user:
+            return None
+        return User.from_document(user)
 
     async def get_by_id(self, user_id: str) -> User | Exception:
         user_doc = await self.__user_repo.get_by_id(user_id)
@@ -29,11 +32,7 @@ class UserService:
         return User.from_document(user_doc)
 
     async def register_user(self, user_in: UserCreate) -> User | Exception:
-        try:
-            existing = await self.get_by_email(user_in.email)
-        except:
-            pass
-
+        existing = await self.get_by_email(user_in.email)   
         if existing:
             raise UserAlreadyExistsError()
 
