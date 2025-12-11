@@ -66,7 +66,12 @@ async def test_register_user_success(service, mock_repo, mocker):
 
 @pytest.mark.asyncio
 async def test_register_user_raises_already_exists(service, mock_repo):
-    mock_repo.get_by_email.return_value = {"email": "exists@example.com"}
+    mock_repo.get_by_email.return_value = {
+        "_id": "existing_id",
+        "username": "ExistingUser",
+        "email": "exists@example.com",
+        "is_active": True
+    }
 
     user_in = UserCreate(username="John", email="exists@example.com", password="pass")
 

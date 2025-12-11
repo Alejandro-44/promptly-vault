@@ -2,7 +2,7 @@ import pytest
 import json
 from bson import ObjectId
 
-from app.schemas.prompt_schema import Prompt
+from app.schemas.prompt_schema import Prompt, PromptSummary
 
 
 PROMPT_MOCKS_FILE = "./tests/mocks/test_prompts_mock.json"
@@ -80,7 +80,7 @@ async def test_add_prompts_and_get_prompts(e2e_client):
     assert len(data) == 3
 
     for prompt in data:
-        Prompt.model_validate(prompt)
+        PromptSummary.model_validate(prompt)
 
 @pytest.mark.asyncio
 async def test_add_prompt_and_update(e2e_client):
