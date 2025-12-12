@@ -5,7 +5,19 @@ export type Prompt = {
   resultExample: string;
   model: string;
   tags: string[];
-  userId: string;
-  user: string;
   pubDate: Date;
+  author: {
+    id: string;
+    username: string;
+    email: string;
+  };
+};
+
+export type PromptSummary = {
+  id: string;
+  title: string;
+  tags: string[];
+  model: string;
+  pubDate: Date;
+  authorName: string;
 };

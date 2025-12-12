@@ -11,7 +11,6 @@ describe("AuthService", () => {
     expect(newUser).toEqual({
       id: "1",
       username: "testuser",
-      email: "test@example.com",
       isActive: true,
     });
   });

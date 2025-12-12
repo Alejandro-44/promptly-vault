@@ -18,10 +18,9 @@ async def test_get_by_id_returns_user(service, mock_repo):
     }
 
     user = await service.get_by_id("123")
+    mock_repo.get_by_id.assert_awaited_once_with("123")
 
     assert user.username == "John"
-    assert user.email == "john@example.com"
-    mock_repo.get_by_id.assert_awaited_once_with("123")
 
 
 @pytest.mark.asyncio
@@ -42,7 +41,6 @@ async def test_get_by_id_returns_deleted_user(service, mock_repo):
     user = await service.get_by_id("123")
 
     assert user.username == "deleted user"
-    assert user.email == "deleted@deleted.com"
     assert not user.is_active
 
 
@@ -58,15 +56,20 @@ async def test_register_user_success(service, mock_repo, mocker):
     user = await service.register_user(user_in)
 
     assert user.username == "Alice"
-    assert user.email == "alice@example.com"
     assert user.id == "abc123"
+    
     mock_repo.create.assert_awaited_once()
     mock_repo.get_by_email.assert_awaited_once_with("alice@example.com")
 
 
 @pytest.mark.asyncio
 async def test_register_user_raises_already_exists(service, mock_repo):
-    mock_repo.get_by_email.return_value = {"email": "exists@example.com"}
+    mock_repo.get_by_email.return_value = {
+        "_id": "existing_id",
+        "username": "ExistingUser",
+        "email": "exists@example.com",
+        "is_active": True
+    }
 
     user_in = UserCreate(username="John", email="exists@example.com", password="pass")
 

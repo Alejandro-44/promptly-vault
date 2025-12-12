@@ -15,7 +15,6 @@ class UserLogin(BaseModel):
 class User(BaseModel):
     id: str
     username: str
-    email: EmailStr
     is_active: bool
 
     @staticmethod
@@ -23,10 +22,20 @@ class User(BaseModel):
         return User(
             id=str(document["_id"]),
             username=document["username"],
-            email=document["email"],
             is_active=document["is_active"]
         )
 
+class PrivateUser(User):
+    email: EmailStr
+
+    @staticmethod
+    def from_document(document):
+        return PrivateUser(
+            id=str(document["_id"]),
+            username=document["username"],
+            email=document["email"],
+            is_active=document["is_active"]
+        )
 
 class UpdatePassword(BaseModel):
     old_password: str

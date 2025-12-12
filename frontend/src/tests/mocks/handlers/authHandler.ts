@@ -1,10 +1,10 @@
-import type { User } from "@/services";
+import type { UserCreate, UserLogin } from "@/services";
 import { delay, http, HttpResponse } from "msw";
 
 export const authHandlers = [
   http.post("http://127.0.0.1:8000/auth/register", async ({ request }) => {
     await delay(150);
-    const body = (await request.json()) as User;
+    const body = (await request.json()) as UserCreate;
     if (body.email !== "fail@example.com") {
       return HttpResponse.json(
         {
@@ -23,7 +23,7 @@ export const authHandlers = [
   }),
   http.post("http://127.0.0.1:8000/auth/login", async ({ request }) => {
     await delay(150);
-    const body = (await request.json()) as User;
+    const body = (await request.json()) as UserLogin;
     if (body.email !== "fail@example.com") {
       return HttpResponse.json(
         {

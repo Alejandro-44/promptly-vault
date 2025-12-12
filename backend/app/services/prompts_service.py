@@ -3,7 +3,7 @@ from datetime import datetime
 from bson import ObjectId
 
 from app.repositories.prompts_repository import PromptsRepository
-from app.schemas.prompt_schema import PromptCreate, PromptUpdate, Prompt
+from app.schemas.prompt_schema import PromptCreate, PromptUpdate, Prompt, PromptSummary
 from app.core.exceptions import PromptNotFoundError, DatabaseError
 
 class PromptsService:
@@ -11,23 +11,23 @@ class PromptsService:
     def __init__(self, prompts_repo: PromptsRepository):
         self.__prompts_repo = prompts_repo
 
-    def process_prompt_documents(self, prompt_documents) -> list[Prompt]:
-        return [Prompt.from_document(document) for document in prompt_documents]
+    def process_prompt_documents(self, prompt_documents) -> list[PromptSummary]:
+        return [PromptSummary.from_document(document) for document in prompt_documents]
 
-    async def get_all(self):
-        prompt_documents = await self.__prompts_repo.get()
+    async def get_summary(self) -> list[PromptSummary]:
+        prompt_documents = await self.__prompts_repo.get_summary()
         return self.process_prompt_documents(prompt_documents)
 
-    async def get_by_user(self, user_id: dict):
-        prompt_documents = await self.__prompts_repo.get({ "user_id": ObjectId(user_id) })
+    async def get_by_user(self, user_id: dict) -> list[PromptSummary]:
+        prompt_documents = await self.__prompts_repo.get_summary({ "user_id": ObjectId(user_id) })
         return self.process_prompt_documents(prompt_documents)
     
-    async def get_by_id(self, prompt_id: str):
+    async def get_by_id(self, prompt_id: str) -> Prompt | PromptNotFoundError:
         prompt_document = await self.__prompts_repo.get_by_id(prompt_id)
         if not prompt_document:
             raise PromptNotFoundError()
 
-        return Prompt.from_document(prompt_document)
+        return Prompt.from_document(prompt_document[0])
 
     async def create(self, user_id: str, prompt_in: PromptCreate):
         prompt_data = prompt_in.model_dump()

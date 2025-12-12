@@ -7,7 +7,6 @@ describe("UsersService", () => {
     expect(user).toEqual({
       id: "1",
       username: "johndoe",
-      email: "johndoe@example.com",
       isActive: true,
     });
   });
@@ -27,7 +26,6 @@ describe("UsersService", () => {
     expect(user).toEqual({
       id: "2",
       username: "janedoe",
-      email: "janedoe@example.com",
       isActive: true,
     });
   });

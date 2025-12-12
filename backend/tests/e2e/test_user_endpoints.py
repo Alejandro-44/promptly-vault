@@ -128,5 +128,4 @@ async def test_deactivate_user(e2e_client):
     data = response.json()
 
     assert data["username"] == "deleted user"
-    assert data["email"] == "deleted@deleted.com"
     assert data["is_active"] is False
