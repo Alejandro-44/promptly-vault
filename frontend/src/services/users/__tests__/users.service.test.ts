@@ -3,7 +3,6 @@ import { UsersService } from "../users.service";
 describe("UsersService", () => {
   it("should get the current logged user", async () => {
     const user = await UsersService.getMe();
-
     expect(user).toEqual({
       id: "1",
       username: "johndoe",
