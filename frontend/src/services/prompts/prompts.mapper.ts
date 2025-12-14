@@ -1,7 +1,7 @@
 import type { PromptDTO, PromptSummaryDTO } from "./prompts.dto";
 import type { Prompt, PromptSummary } from "./prompts.model";
 
-export const promptsMapper = {
+export const promptMapper = {
   toPrompt: (dto: PromptDTO): Prompt => ({
     id: dto.id,
     title: dto.title,
