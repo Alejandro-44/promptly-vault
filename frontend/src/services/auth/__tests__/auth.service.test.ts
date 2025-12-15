@@ -9,7 +9,7 @@ describe("AuthService", () => {
     });
 
     expect(newUser).toEqual({
-      id: "1",
+      id: "new-user-id",
       username: "testuser",
       isActive: true,
     });
@@ -18,21 +18,21 @@ describe("AuthService", () => {
   it("should fail to register with an existing email and return 409", async () => {
     await expect(
       AuthService.register({
-        username: "failuser",
-        email: "fail@example.com",  
-        password: "123456",
+        username: "johndoe",
+        email: "johndoe@example.com",  
+        password: "securepassword",
       })
     ).rejects.toThrowError();
   });
 
   it("should login and return a token", async () => {
     const token = await AuthService.login({
-      email: "test@example.com",
-      password: "123456",
+      email: "johndoe@example.com",
+      password: "securepassword",
     });
 
     expect(token).toEqual({
-      accessToken: "mockedtoken",
+      accessToken: "mocked-jwt-token",
       tokenType: "bearer",
     });
   });

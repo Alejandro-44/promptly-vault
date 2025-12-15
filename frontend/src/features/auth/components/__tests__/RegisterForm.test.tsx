@@ -35,10 +35,10 @@ describe("Register Form", () => {
 
   it("displays an error message if registration fails", async () => {
     fireEvent.change(screen.getByLabelText(/username/i), {
-      target: { value: "failUser" },
+      target: { value: "failuser" },
     });
     fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: "fail@example.com" },
+      target: { value: "johndoe@example.com" },
     });
     fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: "12345Test" },

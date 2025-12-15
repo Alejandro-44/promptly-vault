@@ -25,7 +25,6 @@ export class AuthService {
 
   static async logout(): Promise<void> {
     await httpClient.post<void>("/auth/logout");
-    localStorage.removeItem("token");
   }
 
   static async changePassword(data: UpdatePasswordDTO): Promise<void> {

@@ -1,44 +1,46 @@
 import type { UserCreate, UserLogin } from "@/services";
 import { delay, http, HttpResponse } from "msw";
+import { users } from "../data/mocks";
 
 export const authHandlers = [
   http.post("http://127.0.0.1:8000/auth/register", async ({ request }) => {
     await delay(150);
     const body = (await request.json()) as UserCreate;
-    if (body.email !== "fail@example.com") {
+    if (users.some((user) => user.email === body.email)) {
       return HttpResponse.json(
-        {
-          id: "1",
-          username: body.username,
-          email: body.email,
-          is_active: true,
-        },
-        { status: 201 }
+        { detail: "Email already registered" },
+        { status: 409 }
       );
     }
-    return HttpResponse.json(
-      { detail: "Email already registered" },
-      { status: 409 }
-    );
+
+    users.push({
+      id: "new-user-id",
+      username: body.username,
+      email: body.email,
+      password: body.password,
+      is_active: true,
+    });
+
+    return HttpResponse.json({
+      id: "new-user-id",
+      username: body.username,
+      is_active: true,
+    }, { status: 201 });
   }),
   http.post("http://127.0.0.1:8000/auth/login", async ({ request }) => {
     await delay(150);
     const body = (await request.json()) as UserLogin;
-    if (body.email !== "fail@example.com") {
+    if (!users.some((user) => user.email === body.email && user.password === body.password)) {
       return HttpResponse.json(
-        {
-          token_type: "bearer",
-          access_token: "mockedtoken",
-        },
-        { status: 200 }
+        { detail: "Invalid credentials" },
+        { status: 401 }
       );
     }
-    return HttpResponse.json(
-      { detail: "Invalid credentials" },
-      { status: 401 }
-    );
+    return HttpResponse.json({
+      access_token: "mocked-jwt-token",
+      token_type: "bearer",
+    });
   }),
-
   http.post("http://127.0.0.1:8000/auth/logout", async () => {
     await delay(100);
     return HttpResponse.json({}, { status: 204 });

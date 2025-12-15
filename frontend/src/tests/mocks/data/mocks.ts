@@ -1,3 +1,5 @@
+import { email } from "zod";
+
 export const promptSummaryMocks = [
   {
     id: "abc-123",
@@ -35,7 +37,7 @@ export const promptMocks = [
     tags: ["marketing", "copywriting", "saas"],
     pub_date: "2024-01-15T10:30:00Z",
     author: {
-      id: "1",
+      id: "123-abc",
       username: "johndoe",
       email: "johndoe@example.com",
     },
@@ -49,7 +51,7 @@ export const promptMocks = [
     tags: ["javascript", "refactor", "programming"],
     pub_date: "2024-02-02T16:45:00Z",
     author: {
-      id: "1",
+      id: "123-abc",
       username: "johndoe",
       email: "johndoe@example.com",
     },
@@ -63,7 +65,7 @@ export const promptMocks = [
     tags: ["storytelling", "writing", "fantasy"],
     pub_date: "2024-02-10T08:12:00Z",
     author: {
-      id: "1",
+      id: "123-abc",
       username: "johndoe",
       email: "johndoe@example.com",
     },
@@ -72,13 +74,17 @@ export const promptMocks = [
 
 export const users = [
   {
-    id: "1",
+    id: "123-abc",
     username: "johndoe",
+    email: "johndoe@example.com",
+    password: "securepassword",
     is_active: true,
   },
   {
-    id: "2",
-    username: "janedoe",
+    id: "456-def",
+    username: "alex",
+    email: "alex@example.com",
+    password: "securepassword",
     is_active: true,
   }
 ];
