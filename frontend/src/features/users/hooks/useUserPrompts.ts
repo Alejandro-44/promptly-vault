@@ -1,10 +1,22 @@
 import { UsersService } from "@/services";
 import { useQuery } from "@tanstack/react-query";
 
-export function useUserPrompts() {
-  const { data: prompts } = useQuery({
-    queryKey: ["myPrompts"],
-    queryFn: UsersService.getMyPrompts,
+type UseUserPromptsParams = {
+  mode: "me" | "public";
+  userId?: string;
+};
+
+export function useUserPrompts({ mode, userId }: UseUserPromptsParams) {
+  const {
+    data: prompts,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: mode === "me" ? ["prompts", "me"] : ["prompts", userId],
+    queryFn: () =>
+      mode === "me"
+        ? UsersService.getMyPrompts()
+        : UsersService.getUserPrompts(userId!),
   });
-  return { prompts };
+  return { prompts, isLoading, error };
 }
