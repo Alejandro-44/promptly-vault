@@ -24,6 +24,7 @@ async def test_get_summary(service, mock_repo):
             "tags": ["tag1"],
             "model": "gpt-4",
             "pub_date": "2024-01-01T00:00:00Z",
+            "author_id": ObjectId(),
             "author_name": "user1"
         },
         {
@@ -32,6 +33,7 @@ async def test_get_summary(service, mock_repo):
             "tags": ["tag2"],
             "model": "gpt-3.5",
             "pub_date": "2024-01-02T00:00:00Z",
+            "author_id": ObjectId(),
             "author_name": "user2"
         }
     ]
@@ -48,11 +50,12 @@ async def test_get_summary(service, mock_repo):
 async def test_get_by_user(service, mock_repo):
     mock_repo.get_summary.return_value = [
         {
-            "_id": ObjectId(MOCK_USER_ID),
+            "_id": ObjectId(MOCK_PROMPT_ID),
             "title": "Test Prompt",
             "tags": ["tag1"],
             "model": "gpt-4",
             "pub_date": "2024-01-01T00:00:00Z",
+            "author_id": MOCK_USER_ID,
             "author_name": "testuser"
         }
     ]

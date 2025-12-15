@@ -49,7 +49,9 @@ class PromptSummary(BaseModel):
     tags: List[str]
     model: str
     pub_date: datetime
+    author_id: str
     author_name: str
+
     @staticmethod
     def from_document(document):
         return PromptSummary(
@@ -58,5 +60,6 @@ class PromptSummary(BaseModel):
             tags=document.get("tags", []),
             model=document["model"],
             pub_date=document["pub_date"],
+            author_id=str(document["author_id"]),
             author_name=document["author_name"]
         )

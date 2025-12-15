@@ -42,6 +42,7 @@ class PromptsRepository:
                     "tags": 1,
                     "model": 1,
                     "pub_date": 1,
+                    "author_id": "$author._id",
                     "author_name": "$author.username"
                 }
             }
