@@ -7,13 +7,14 @@ const mockPrompt = {
   title: "Generate a marketing headline",
   model: "gpt-4",
   tags: ["marketing", "copywriting", "saas"],
-  user: "johndoe",
+  authorName: "johndoe",
+  pubDate: new Date("2024-01-15T10:30:00Z"),
 };
 
 describe("PromptCard", () => {
   beforeEach(() => {
     renderWithProviders(
-      <PromptCard {...mockPrompt} />
+      <PromptCard prompt={mockPrompt} />
     );
   });
 
