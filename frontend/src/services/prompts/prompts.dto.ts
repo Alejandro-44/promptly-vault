@@ -19,5 +19,6 @@ export type PromptSummaryDTO = {
   tags: string[];
   model: string;
   pub_date: string;
+  author_id: string;
   author_name: string;
 };

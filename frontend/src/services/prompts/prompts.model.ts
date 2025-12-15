@@ -19,5 +19,6 @@ export type PromptSummary = {
   tags: string[];
   model: string;
   pubDate: Date;
+  authorId: string;
   authorName: string;
 };

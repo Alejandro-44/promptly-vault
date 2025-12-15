@@ -25,6 +25,7 @@ export const promptSummaryMapper = {
     tags: dto.tags,
     model: dto.model,
     pubDate: new Date(dto.pub_date),
+    authorId: dto.author_id,
     authorName: dto.author_name,
   }),
 };
