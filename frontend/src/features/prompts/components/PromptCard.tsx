@@ -1,3 +1,4 @@
+import type { PromptSummary } from "@/services";
 import {
   Box,
   Card,
@@ -10,20 +11,16 @@ import {
 import { Link } from "react-router";
 
 type Props = {
-  id: string;
-  title: string;
-  model: string;
-  user: string;
-  tags: string[];
+  prompt: PromptSummary;
 };
 
-export function PromptCard({ id, title, model, user, tags }: Props) {
+export function PromptCard({ prompt }: Props) {
   return (
-    <Card sx={{ height: "100%", transition: "all 0.2s ease-in-out" }}>
+    <Card sx={{ height: "100%", transition: "all 0.2s ease-in-out" }} data-testid="prompt-card">
       <CardActionArea
         sx={{ height: "inherit", mb: 2 }}
         component={Link}
-        to={`/prompts/${id}`}
+        to={`/prompts/${prompt.id}`}
         data-testid="prompt-link"
       >
         <CardContent
@@ -35,7 +32,7 @@ export function PromptCard({ id, title, model, user, tags }: Props) {
           }}
         >
           <Typography component="h3" variant="h6">
-            {title}
+            {prompt.title}
           </Typography>
           <Stack spacing={1.5}>
             <Box
@@ -44,13 +41,13 @@ export function PromptCard({ id, title, model, user, tags }: Props) {
                 gap: 1,
               }}
             >
-              {tags.map((tag) => (
+              {prompt.tags.map((tag) => (
                 <Chip key={tag} label={tag} size="small" />
               ))}
             </Box>
             <Stack direction="row" justifyContent="space-between">
-              <Typography>By {user}</Typography>
-              <Typography>{model}</Typography>
+              <Typography>By {prompt.authorName}</Typography>
+              <Typography>{prompt.model}</Typography>
             </Stack>
           </Stack>
         </CardContent>

@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-import type { User } from "@/types/api";
+import type { User } from "@/services";
 
 interface UserState {
   user: User | null;
