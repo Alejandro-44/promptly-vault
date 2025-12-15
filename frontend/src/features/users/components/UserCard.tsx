@@ -1,9 +1,11 @@
+import type { User } from "@/services";
 import { Avatar, Card, CardContent, Stack, Typography } from "@mui/material";
-import { useUserStore } from "../contexts";
 
-export default function UserCard() {
-  const user = useUserStore((state) => state.user);
+type UserCardProps = {
+  user: User; 
+};
 
+export function UserCard({ user}: UserCardProps) {
   return (
     <Card >
       <CardContent>
