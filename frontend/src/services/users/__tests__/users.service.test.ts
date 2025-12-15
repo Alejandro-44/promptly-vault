@@ -4,7 +4,7 @@ describe("UsersService", () => {
   it("should get the current logged user", async () => {
     const user = await UsersService.getMe();
     expect(user).toEqual({
-      id: "1",
+      id: "123-abc",
       username: "johndoe",
       isActive: true,
     });
@@ -20,12 +20,16 @@ describe("UsersService", () => {
   });
 
   it("should get a user by ID", async () => {
-    const user = await UsersService.getUserById("2");
+    const user = await UsersService.getUserById("456-def");
 
     expect(user).toEqual({
-      id: "2",
-      username: "janedoe",
+      id: "456-def",
+      username: "alex",
       isActive: true,
     });
+  });
+  it("should get a user's prompts by user ID", async () => {
+    const prompts = await UsersService.getUserPrompts("123-abc");
+    expect(prompts).toHaveLength(3);
   });
 });

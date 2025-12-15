@@ -25,4 +25,11 @@ export class UsersService {
     const data = await httpClient.get<UserDTO>(`/users/${userId}`);
     return userMapper.toUser(data);
   }
+
+  static async getUserPrompts(userId: string): Promise<PromptSummary[]> {
+    const data = await httpClient.get<PromptSummaryDTO[]>(
+      `/users/${userId}/prompts`
+    );
+    return data.map(promptSummaryMapper.toPromptSummary);
+  }
 }
