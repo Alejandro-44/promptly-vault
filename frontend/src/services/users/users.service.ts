@@ -2,9 +2,9 @@ import { httpClient } from "../api/httpClient";
 import type { UserDTO } from "./users.dto";
 import type { User } from "./users.model";
 import { userMapper } from "./users.mapper";
-import type { Prompt, PromptSummary } from "../prompts/prompts.model";
-import type { PromptDTO, PromptSummaryDTO } from "../prompts/prompts.dto";
-import { promptsMapper, promptSummaryMapper } from "../prompts/prompts.mapper";
+import type { PromptSummary } from "../prompts/prompts.model";
+import type { PromptSummaryDTO } from "../prompts/prompts.dto";
+import { promptSummaryMapper } from "../prompts/prompts.mapper";
 
 export class UsersService {
   static async getMe(): Promise<User> {
