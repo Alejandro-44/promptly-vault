@@ -1,8 +1,7 @@
 from fastapi import APIRouter, status
 
 from app.dependencies import UserDependency, ServicesDependency
-from app.schemas.prompt_schema import PromptSummary
-from app.schemas.user_schema import User
+from app.schemas import PromptSummary, User
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -24,11 +23,19 @@ async def get_my_prompts(current_user: UserDependency, service: ServicesDependen
     return await service.prompts.get_by_user(current_user.id)
 
 
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_me(user: UserDependency, service: ServicesDependency):
+    await service.user.deactivate(user.id)
+
+
 @router.get("/{user_id}")
 async def get_user(user_id: str, service: ServicesDependency):
     return await service.user.get_by_id(user_id)
 
 
-@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_me(user: UserDependency, service: ServicesDependency):
-    await service.user.deactivate(user.id)
+@router.get("/{id}/prompts", response_model=list[PromptSummary], summary="Get user prompts")
+async def get_user_prompts(id: str, service: ServicesDependency):
+    """
+    Get prompts created by a specific user
+    """
+    return await service.prompts.get_by_user(id)
