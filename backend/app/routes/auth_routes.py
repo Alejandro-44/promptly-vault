@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Response
 
-from app.schemas.user_schema import UserLogin, UserCreate, User, Token, UpdatePassword
+from app.schemas import UserLogin, UserCreate, User, Token, UpdatePassword
 from app.dependencies import UserDependency, ServicesDependency 
 from app.core.exceptions import UserAlreadyExistsError, DatabaseError, UserNotFoundError, WrongPasswordError, UnauthorizedError
 

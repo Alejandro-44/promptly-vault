@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 
 from app.dependencies import ServicesDependency, UserDependency
-from app.schemas.prompt_schema import Prompt, PromptCreate, PromptUpdate, PromptSummary
-from app.schemas.comment_schema import Comment, CommentCreate
+from app.schemas import Prompt, PromptCreate, PromptUpdate, PromptSummary, Comment, CommentCreate
 from app.core.exceptions import PromptNotFoundError, DatabaseError, CommentNotFoundError
 
 
