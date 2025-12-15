@@ -18,30 +18,34 @@ export const router = createBrowserRouter([
       },
       {
         path: "login",
-        Component: LoginPage
+        Component: LoginPage,
       },
       {
         path: "register",
-        Component: RegisterPage
+        Component: RegisterPage,
       },
       {
         path: "users",
         children: [
           {
             path: "me",
-            Component: UserPage
-          }
-        ]
+            Component: () => <UserPage mode="me" />,
+          },
+          { 
+            path: ":userId",
+            Component: () => <UserPage mode="public" /> 
+          },
+        ],
       },
       {
         path: "prompts",
         children: [
           {
             path: ":id",
-            Component: () => <div>Prompt Detail Page</div>
-          }
-        ]
-      }
+            Component: () => <div>Prompt Detail Page</div>,
+          },
+        ],
+      },
     ],
   },
 ]);
