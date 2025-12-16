@@ -13,7 +13,7 @@ export function PromptTags({ tags }: PromptTagsProps) {
       }}
     >
       {tags.map((tag) => (
-        <Chip key={tag} label={tag} size="small" />
+        <Chip role="tag" key={tag} label={tag} size="small" />
       ))}
     </Box>
   );
