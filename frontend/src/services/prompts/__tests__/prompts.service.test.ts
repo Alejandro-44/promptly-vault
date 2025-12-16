@@ -9,6 +9,7 @@ describe("PromptsService", () => {
       title: "Generate a marketing headline",
       model: "gpt-4",
       tags: ["marketing", "copywriting", "saas"],
+      authorId: "123-abc",
       authorName: "johndoe",
       pubDate: new Date("2024-01-15T10:30:00Z"),
     });
@@ -29,7 +30,7 @@ describe("PromptsService", () => {
       tags: ["marketing", "copywriting", "saas"],
       pubDate: new Date("2024-01-15T10:30:00Z"),
       author: {
-        id: "1",
+        id: "123-abc",
         username: "johndoe",
         email: "johndoe@example.com",
       },
