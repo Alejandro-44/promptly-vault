@@ -7,6 +7,7 @@ import { router } from "./router";
 import "@/app/index.css";
 
 import "@fontsource-variable/inter/index.css";
+import { AuthProvider } from "@/features/auth/providers";
 
 async function enableMocking() {
   if (import.meta.env.VITE_USE_MOCKS !== "true") {
@@ -20,7 +21,9 @@ enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </QueryClientProvider>
     </React.StrictMode>
   );
