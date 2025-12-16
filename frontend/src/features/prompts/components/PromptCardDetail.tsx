@@ -21,7 +21,7 @@ type Props = {
 export function PromptCardDetail({ promptId }: Props) {
   const { data: prompt } = usePrompt({ promptId });
   return (
-    <Card>
+    <Card component="article" sx={{ maxWidth: "md", mx: "auto" }}>
       <CardContent sx={{ p: 3 }}>
         <Typography sx={{ mb: 2 }} variant="body1">
           {prompt?.model}
@@ -31,6 +31,7 @@ export function PromptCardDetail({ promptId }: Props) {
           {prompt?.title}
         </Typography>
         <Stack
+          data-testid="author-link"
           component={Link}
           to={`/users/${prompt?.author.id}`}
           direction="row"
