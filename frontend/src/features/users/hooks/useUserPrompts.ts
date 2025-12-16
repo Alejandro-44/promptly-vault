@@ -7,16 +7,22 @@ type UseUserPromptsParams = {
 };
 
 export function useUserPrompts({ mode, userId }: UseUserPromptsParams) {
-  const {
-    data: prompts,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: mode === "me" ? ["prompts", "me"] : ["prompts", userId],
+  const isMe = mode === "me";
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: isMe
+      ? ["users", "me", "prompts"]
+      : ["users", userId, "prompts"],
     queryFn: () =>
-      mode === "me"
+      isMe
         ? UsersService.getMyPrompts()
         : UsersService.getUserPrompts(userId!),
+    enabled: isMe || !!userId,
   });
-  return { prompts, isLoading, error };
+
+  return {
+    prompts: data,
+    isLoading,
+    error,
+  };
 }

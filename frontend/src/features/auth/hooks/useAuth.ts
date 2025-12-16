@@ -19,7 +19,8 @@ export function useMe() {
   return useQuery<User>({
     queryKey: authKeys.me,
     queryFn: () => UsersService.getMe(),
-    retry: false,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -36,11 +37,13 @@ export function useRegister() {
 
 export function useLogin() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { setUser } = useUserStore();
 
   return useMutation<Token, Error, UserLoginDTO>({
     mutationFn: (data) => AuthService.login(data),
     onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: authKeys.me });
       const user = await UsersService.getMe();
       setUser(user);
       navigate("/users/me");
@@ -51,11 +54,13 @@ export function useLogin() {
 export function useLogout() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const clearUser = useUserStore((s) => s.clearUser);
 
   return useMutation<void, Error>({
-    mutationFn: () => AuthService.logout(),
+    mutationFn: AuthService.logout,
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: authKeys.me });
+      clearUser();
       navigate("/");
     },
   });
