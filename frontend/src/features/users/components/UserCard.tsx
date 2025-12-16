@@ -5,7 +5,7 @@ type UserCardProps = {
   user: User; 
 };
 
-export function UserCard({ user}: UserCardProps) {
+export function UserCard({ user }: UserCardProps) {
   return (
     <Card >
       <CardContent>
