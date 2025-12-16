@@ -1,13 +1,14 @@
 import { Outlet } from "react-router";
 import { Header } from "./Header";
+import { Container } from "@mui/material";
 
 export function Layout() {
   return (
     <>
       <Header />
-      <main>
+      <Container component="main" sx={{ py: 4 }}>
         <Outlet />
-      </main>
+      </Container>
     </>
   );
 }
