@@ -5,7 +5,7 @@ import { promptMapper, promptSummaryMapper } from "./prompts.mapper";
 
 export class PromptsService {
   static async getAllPrompts(): Promise<PromptSummary[]> {
-    const data = await httpClient.get<PromptSummaryDTO[]>("/prompts");
+    const data = await httpClient.get<PromptSummaryDTO[]>("/prompts/");
     return data.map(promptSummaryMapper.toPromptSummary);
   }
 
