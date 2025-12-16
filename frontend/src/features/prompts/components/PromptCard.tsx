@@ -1,14 +1,13 @@
 import type { PromptSummary } from "@/services";
 import {
-  Box,
   Card,
   CardActionArea,
   CardContent,
-  Chip,
   Stack,
   Typography,
 } from "@mui/material";
 import { Link } from "react-router";
+import { PromptTags } from "./PromptTags";
 
 type Props = {
   prompt: PromptSummary;
@@ -35,16 +34,7 @@ export function PromptCard({ prompt }: Props) {
             {prompt.title}
           </Typography>
           <Stack spacing={1.5}>
-            <Box
-              sx={{
-                display: "flex",
-                gap: 1,
-              }}
-            >
-              {prompt.tags.map((tag) => (
-                <Chip key={tag} label={tag} size="small" />
-              ))}
-            </Box>
+            <PromptTags tags={prompt.tags} />
             <Stack direction="row" justifyContent="space-between">
               <Typography>By {prompt.authorName}</Typography>
               <Typography>{prompt.model}</Typography>
