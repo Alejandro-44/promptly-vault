@@ -11,6 +11,7 @@ export function renderWithProviders(ui: React.ReactNode) {
         <Routes>
           <Route path="/" element={ui} />
           <Route path="/prompts/:id" element={<div>Prompt detail</div>} />
+          <Route path="/users/:id" element={<div>Author page</div>} />
           <Route path="/login" element={<div>Login page</div>} />
         </Routes>
       </MemoryRouter>
