@@ -7,6 +7,7 @@ const mockPrompt = {
   title: "Generate a marketing headline",
   model: "gpt-4",
   tags: ["marketing", "copywriting", "saas"],
+  authorId: "123-abc",
   authorName: "johndoe",
   pubDate: new Date("2024-01-15T10:30:00Z"),
 };
