@@ -5,6 +5,7 @@ import { Layout } from "@/components/Layout";
 import { UserPage } from "@/features/users/page/UserPage";
 import { rootLoader } from "./loaders/userLoader";
 import { HomePage } from "@/features/home/pages/HomePage";
+import { PromptDetail } from "@/features/prompts/pages/PromptDetail";
 
 export const router = createBrowserRouter([
   {
@@ -41,8 +42,8 @@ export const router = createBrowserRouter([
         path: "prompts",
         children: [
           {
-            path: ":id",
-            Component: () => <div>Prompt Detail Page</div>,
+            path: ":promptId",
+            Component: PromptDetail,
           },
         ],
       },
