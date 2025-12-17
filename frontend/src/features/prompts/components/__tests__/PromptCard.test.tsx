@@ -23,9 +23,9 @@ describe("PromptCard", () => {
     cleanup();
   });
   test("should render PromptCard component", () => {
-    expect(screen.findByText(/Generate a marketing headline/)).toBeDefined();
-    expect(screen.findByText(/gpt-4/)).toBeDefined();
-    expect(screen.findByText(/johndoe/)).toBeDefined();
+    expect(screen.getByText(/Generate a marketing headline/)).toBeDefined();
+    expect(screen.getByText(/gpt-4/)).toBeDefined();
+    expect(screen.getByText(/johndoe/)).toBeDefined();
   });
   test("should display all tags", () => {
     mockPrompt.tags.forEach((tag) => {

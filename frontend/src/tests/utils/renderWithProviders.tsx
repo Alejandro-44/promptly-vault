@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 
-export function renderWithProviders(ui: React.ReactNode, initialEntries: string[] = ["/"]) {
+export function renderWithProviders(ui: React.ReactNode, initialEntries: string[] = ["/test"]) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
