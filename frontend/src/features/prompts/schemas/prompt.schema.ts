@@ -13,7 +13,7 @@ export const promptSchema = z.object({
     .min(10, "Result example must be at least 10 characters"),
   model: z.string().min(1, "Select a model"),
   tags: z
-    .array(z.string().min(1))
+    .array(z.string().min(1, "Add at least one tag"))
     .min(1, "Add at least one tag"),
 });
 
