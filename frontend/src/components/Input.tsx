@@ -6,9 +6,11 @@ type Props = {
   type?: string;
   label?: string;
   placeholder?: string;
+  multiline?: boolean;
+  rows?: number;
 };
 
-function Input({ name, type, label, placeholder }: Props) {
+function Input({ name, type, label, placeholder, multiline, rows }: Props) {
   const {
     register,
     formState: { errors },
@@ -25,13 +27,15 @@ function Input({ name, type, label, placeholder }: Props) {
   return (
     <TextField
       {...register(name)}
-      sx={{ whiteSpace: "pre-line" }}
+      sx={{ whiteSpace: "pre-line", width: "100%" }}
       name={name}
       type={type}
       label={label}
       placeholder={placeholder}
       error={!!error}
       helperText={allErrors.join("\n")}
+      multiline={multiline}
+      rows={rows}
     />
   );
 }
