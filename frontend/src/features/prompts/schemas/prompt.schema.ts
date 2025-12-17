@@ -8,7 +8,7 @@ export const promptSchema = z.object({
   prompt: z
     .string()
     .min(10, "Prompt must be at least 10 characters"),
-  result_example: z
+  resultExample: z
     .string()
     .min(10, "Result example must be at least 10 characters"),
   model: z.string().min(1, "Select a model"),
