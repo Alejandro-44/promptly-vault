@@ -27,7 +27,7 @@ function Input({ name, type, label, placeholder, multiline, rows }: Props) {
   return (
     <TextField
       {...register(name)}
-      sx={{ whiteSpace: "pre-line", width: "100%" }}
+      sx={{ whiteSpace: "pre-line" }}
       name={name}
       type={type}
       label={label}
@@ -36,6 +36,7 @@ function Input({ name, type, label, placeholder, multiline, rows }: Props) {
       helperText={allErrors.join("\n")}
       multiline={multiline}
       rows={rows}
+      fullWidth
     />
   );
 }
