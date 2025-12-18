@@ -28,8 +28,8 @@ export function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
   const methods = usePromptForm();
 
   const handleSubmit = methods.handleSubmit((data) => {
-    console.log("Submitting data:", data);
     onSubmit(data);
+    methods.reset();
   });
 
   return (
