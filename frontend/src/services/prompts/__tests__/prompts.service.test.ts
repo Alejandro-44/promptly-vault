@@ -36,4 +36,19 @@ describe("PromptsService", () => {
       },
     });
   });
+
+  it("should resturn successful message and id when create a new prompt successfully", async () => {
+    const mocksPromptCreate = {
+      title: "Integration test",
+      prompt: "Write a poem",
+      resultExample: "A small poem",
+      model: "Claude",
+      tags: ["ai", "poem"],
+    };
+
+    const response = await PromptsService.createPrompt(mocksPromptCreate);
+
+    expect(response).toHaveProperty("message")
+    expect(response).toHaveProperty("id", "mockedid789456")
+  });
 });
