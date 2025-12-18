@@ -12,5 +12,13 @@ export const promptsHandlers = [
       return HttpResponse.json({ message: "Prompt not found" }, { status: 404 });
     }
     return HttpResponse.json(prompt)
+  }),
+  http.post("http://127.0.0.1:8000/prompts/", ({ request }) => {
+    const prompt = request.body;
+
+    return HttpResponse.json({
+      message: "Prompt created sucessfully",
+      id: "mockedid789456"
+    })
   })
 ]
