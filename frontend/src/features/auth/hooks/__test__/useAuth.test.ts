@@ -3,7 +3,7 @@ import { renderHookWithClient } from "@/tests/utils/renderHookWithClient";
 import { useLogin, useLogout, useMe, useRegister } from "../useAuth";
 import { act, waitFor } from "@testing-library/react";
 
-export const navigateMock = vi.fn();
+const navigateMock = vi.fn();
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual<any>("react-router");
