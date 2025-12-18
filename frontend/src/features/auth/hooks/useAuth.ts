@@ -21,6 +21,7 @@ export function useMe() {
     queryFn: () => UsersService.getMe(),
     staleTime: Infinity,
     refetchOnWindowFocus: false,
+    retry: false,
   });
 }
 

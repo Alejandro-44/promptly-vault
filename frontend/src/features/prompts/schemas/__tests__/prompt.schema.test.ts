@@ -5,7 +5,7 @@ describe("promptSchema", () => {
     const data = {
       title: "Test Prompt",
       prompt: "This is a test prompt with at least 10 characters",
-      result_example: "This is a result example with at least 10 characters",
+      resultExample: "This is a result example with at least 10 characters",
       model: "gpt-4",
       tags: ["tag1", "tag2"],
     };
@@ -54,7 +54,7 @@ describe("promptSchema", () => {
     const result = promptSchema.safeParse({
       title: "Test Prompt",
       prompt: "Short",
-      result_example: "This is a result example with at least 10 characters",
+      resultExample: "This is a result example with at least 10 characters",
       model: "gpt-4",
       tags: ["tag1"],
     });
@@ -70,7 +70,7 @@ describe("promptSchema", () => {
     const result = promptSchema.safeParse({
       title: "Test Prompt",
       prompt: "This is a test prompt with at least 10 characters",
-      result_example: "Short",
+      resultExample: "Short",
       model: "gpt-4",
       tags: ["tag1"],
     });
@@ -79,14 +79,14 @@ describe("promptSchema", () => {
 
     const errors = (result as any).error.flatten().fieldErrors;
 
-    expect(errors.result_example?.[0]).toBe("Result example must be at least 10 characters");
+    expect(errors.resultExample?.[0]).toBe("Result example must be at least 10 characters");
   });
 
   it("returns an error if model is empty", () => {
     const result = promptSchema.safeParse({
       title: "Test Prompt",
       prompt: "This is a test prompt with at least 10 characters",
-      result_example: "This is a result example with at least 10 characters",
+      resultExample: "This is a result example with at least 10 characters",
       model: "",
       tags: ["tag1"],
     });
@@ -103,7 +103,7 @@ describe("promptSchema", () => {
       const result = promptSchema.safeParse({
         title: "Test Prompt",
         prompt: "This is a test prompt with at least 10 characters",
-        result_example: "This is a result example with at least 10 characters",
+        resultExample: "This is a result example with at least 10 characters",
         model: "gpt-4",
         tags: [],
       });
@@ -119,7 +119,7 @@ describe("promptSchema", () => {
       const result = promptSchema.safeParse({
         title: "Test Prompt",
         prompt: "This is a test prompt with at least 10 characters",
-        result_example: "This is a result example with at least 10 characters",
+        resultExample: "This is a result example with at least 10 characters",
         model: "gpt-4",
         tags: ["tag1", ""],
       });
