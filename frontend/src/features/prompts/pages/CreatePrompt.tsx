@@ -1,11 +1,13 @@
 import { Card, CardContent } from "@mui/material";
 import { PromptForm } from "../components/PromptForm";
 import type { PromptFormValues } from "../schemas";
+import { useCreatePrompt } from "../hooks";
 
 export function CreatePrompt() {
+  const { mutate } = useCreatePrompt()
 
   const handleCreatePrompt = (data: PromptFormValues) => {
-    console.log("Creating prompt with data:", data);
+    mutate(data)
   }
 
   return (
