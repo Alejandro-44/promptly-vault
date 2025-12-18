@@ -14,7 +14,7 @@ export class PromptsService {
     return promptMapper.toPrompt(data);
   }
 
-  static async createPrompt(prompt: PromptCreate) {
+  static async create(prompt: PromptCreate) {
     const promptDTO = promptCreateMapper.toPromptCreateDTO(prompt);
     const data = await httpClient.post<PromptCreateResponse>('/prompts/', promptDTO);
     return {

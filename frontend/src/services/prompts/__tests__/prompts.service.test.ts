@@ -46,7 +46,7 @@ describe("PromptsService", () => {
       tags: ["ai", "poem"],
     };
 
-    const response = await PromptsService.createPrompt(mocksPromptCreate);
+    const response = await PromptsService.create(mocksPromptCreate);
 
     expect(response).toHaveProperty("message")
     expect(response).toHaveProperty("id", "mockedid789456")
