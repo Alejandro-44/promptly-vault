@@ -6,9 +6,11 @@ type Props = {
   type?: string;
   label?: string;
   placeholder?: string;
+  multiline?: boolean;
+  rows?: number;
 };
 
-function Input({ name, type, label, placeholder }: Props) {
+function Input({ name, type, label, placeholder, multiline, rows }: Props) {
   const {
     register,
     formState: { errors },
@@ -32,6 +34,9 @@ function Input({ name, type, label, placeholder }: Props) {
       placeholder={placeholder}
       error={!!error}
       helperText={allErrors.join("\n")}
+      multiline={multiline}
+      rows={rows}
+      fullWidth
     />
   );
 }

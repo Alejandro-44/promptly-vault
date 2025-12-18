@@ -6,6 +6,7 @@ import { UserPage } from "@/features/users/page/UserPage";
 import { HomePage } from "@/features/home/pages/HomePage";
 import { PromptDetail } from "@/features/prompts/pages/PromptDetail";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
+import { CreatePrompt } from "@/features/prompts/pages/CreatePrompt";
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +50,15 @@ export const router = createBrowserRouter([
             path: ":promptId",
             Component: PromptDetail,
           },
+          {
+            Component: ProtectedRoute,
+            children: [
+              {
+                path: "new",
+                Component: CreatePrompt,
+              }
+            ]
+          }
         ],
       },
     ],
