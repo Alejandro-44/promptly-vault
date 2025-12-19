@@ -72,3 +72,18 @@ export function useChangePassword() {
     mutationFn: (data) => AuthService.changePassword(data),
   });
 }
+
+export function useAuth() {
+  const user = useUserStore((s) => s.user);
+  const isLoading = useUserStore((s) => s.isLoading);
+
+  const isAuthenticated = !!user;
+
+  return {
+    user,
+    isAuthenticated,
+    isLoading,
+    userId: user?.id,
+    username: user?.username,
+  };
+}
