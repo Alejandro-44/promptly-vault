@@ -13,7 +13,7 @@ export function CreatePrompt() {
   return (
     <Card sx={{ maxWidth: 875, mx: "auto"}}>
       <CardContent sx={{ p: 4}}>
-        <PromptForm onSubmit={handleCreatePrompt} />
+        <PromptForm mode="create" onSubmit={handleCreatePrompt} />
       </CardContent>
     </Card>
   )
