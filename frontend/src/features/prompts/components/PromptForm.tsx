@@ -4,6 +4,8 @@ import { FormProvider } from "react-hook-form";
 import { usePromptForm } from "../hooks/usePromptForm";
 import type { PromptFormValues } from "../schemas";
 import { RHFAutocomplete } from "@/components/RHFAutocomplete";
+import type { PromptCreate } from "@/services";
+import { useEffect } from "react";
 
 const MODELS = [
   { id: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
@@ -17,19 +19,43 @@ const TAGS = [
   { id: "creativity", label: "Creativity" },
   { id: "education", label: "Education" },
   { id: "entertainment", label: "Entertainment" },
+  { id: "marketing", label: "Marketing" },
+  { id: "saas", label: "SaaS"},
+  { id: "copywriting", label: "Copywriting"}
 ];
 
 type PromptFormProps = {
+  mode: "create" | "edit";
   onSubmit: (data: PromptFormValues) => void;
   isLoading?: boolean;
+  defaultValues?: PromptCreate;
 };
 
-export function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
+export function PromptForm({
+  mode,
+  onSubmit,
+  isLoading,
+  defaultValues,
+}: PromptFormProps) {
   const methods = usePromptForm();
+
+  useEffect(() => {
+    if (mode === "edit" && defaultValues) {
+      methods.reset({
+        title: defaultValues.title,
+        prompt: defaultValues.prompt,
+        model: defaultValues.model,
+        tags: defaultValues.tags,
+        resultExample: defaultValues.resultExample,
+      });
+    }
+  }, [mode, defaultValues, methods]);
 
   const handleSubmit = methods.handleSubmit((data) => {
     onSubmit(data);
-    methods.reset();
+    if (mode === "create") {
+      methods.reset();
+    }
   });
 
   return (
@@ -42,10 +68,10 @@ export function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
           <Grid size={12}>
             <Input name="prompt" label="Prompt" multiline rows={4} />
           </Grid>
-          <Grid size={{ "md": 6, "xs": 12 }}>
+          <Grid size={{ md: 6, xs: 12 }}>
             <RHFAutocomplete name="model" label="Model" options={MODELS} />
           </Grid>
-          <Grid size={{ "md": 6, "xs": 12 }}>
+          <Grid size={{ md: 6, xs: 12 }}>
             <RHFAutocomplete name="tags" label="Tags" options={TAGS} multiple />
           </Grid>
           <Grid size={12}>
