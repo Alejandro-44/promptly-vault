@@ -22,3 +22,16 @@ export type PromptSummary = {
   authorId: string;
   authorName: string;
 };
+
+export type PromptCreate = {
+  title: string;
+  prompt: string;
+  resultExample: string;
+  model: string;
+  tags: string[];
+}
+
+export type PromptCreateResponse = {
+  message: string;
+  id: string;
+}

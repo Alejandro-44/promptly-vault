@@ -9,7 +9,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { usePrompt } from "../hooks/usePrompt";
+import { usePrompt } from "../hooks";
 import { PromptTags } from "./PromptTags";
 import { CopyIcon } from "lucide-react";
 import { Link } from "react-router";

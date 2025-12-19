@@ -1,7 +1,7 @@
 import { httpClient } from "../api/httpClient";
 import type { PromptDTO, PromptSummaryDTO } from "./prompts.dto";
-import type { Prompt, PromptSummary } from "./prompts.model";
-import { promptMapper, promptSummaryMapper } from "./prompts.mapper";
+import type { Prompt, PromptCreate, PromptCreateResponse, PromptSummary } from "./prompts.model";
+import { promptCreateMapper, promptMapper, promptSummaryMapper } from "./prompts.mapper";
 
 export class PromptsService {
   static async getAllPrompts(): Promise<PromptSummary[]> {
@@ -12,5 +12,14 @@ export class PromptsService {
   static async getPromptDetail(id: string): Promise<Prompt> {
     const data = await httpClient.get<PromptDTO>(`/prompts/${id}`);
     return promptMapper.toPrompt(data);
+  }
+
+  static async create(prompt: PromptCreate) {
+    const promptDTO = promptCreateMapper.toPromptCreateDTO(prompt);
+    const data = await httpClient.post<PromptCreateResponse>('/prompts/', promptDTO);
+    return {
+      id: data.id,
+      message: data.message,
+    }
   }
 }

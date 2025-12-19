@@ -22,3 +22,11 @@ export type PromptSummaryDTO = {
   author_id: string;
   author_name: string;
 };
+
+export type PromptCreateDTO = {
+  title: string;
+  prompt: string;
+  result_example: string;
+  model: string;
+  tags: string[];
+}
