@@ -3,13 +3,12 @@ import { CircleXIcon } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 
 import Input from "@/components/Input";
-import { useRegister } from "../hooks/useAuth";
-import { useResigerForm } from "../hooks/useRegisterForm";
+import { useRegisterForm, useRegister } from "../hooks";
 import type { RegisterFormValues } from "../schemas/register.schema";
 
 const RegisterForm = () => {
   const { mutate, isPending, error } = useRegister();
-  const methods = useResigerForm();
+  const methods = useRegisterForm();
   const onSubmit = methods.handleSubmit((data: RegisterFormValues) => {
     mutate(data);
   });
