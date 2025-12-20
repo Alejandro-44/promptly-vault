@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { promptMocks, promptSummaryMocks } from "../data/mocks";
 import type { PromptCreateDTO } from "@/services/prompts/prompts.dto";
 
@@ -9,6 +9,7 @@ export const promptsHandlers = [
   http.get<{ id: string }>(
     "http://127.0.0.1:8000/prompts/:id",
     ({ params }) => {
+      delay(150);
       const { id } = params;
       const prompt = promptMocks.find((prompt) => prompt.id === id);
       if (!prompt) {
