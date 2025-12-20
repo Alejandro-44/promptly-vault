@@ -23,7 +23,7 @@ export function PromptOwnerGuard() {
   }, [prompt, user, navigate]);
 
   if (isLoading) {
-    return <div>Cargando prompt...</div>;
+    return <div>Loading prompt...</div>;
   }
 
   if (!prompt) {
