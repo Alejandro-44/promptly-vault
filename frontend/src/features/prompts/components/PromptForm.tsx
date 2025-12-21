@@ -6,23 +6,8 @@ import type { PromptFormValues } from "../schemas";
 import { RHFAutocomplete } from "@/components/RHFAutocomplete";
 import type { PromptCreate } from "@/services";
 import { useEffect } from "react";
-
-const MODELS = [
-  { id: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
-  { id: "gpt-4", label: "GPT-4" },
-  { id: "gpt-4-turbo", label: "GPT-4 Turbo" },
-  { id: "claude-2", label: "Claude 2" },
-  { id: "gemini-3-pro", label: "Gemini 3 Pro" },
-];
-const TAGS = [
-  { id: "productivity", label: "Productivity" },
-  { id: "creativity", label: "Creativity" },
-  { id: "education", label: "Education" },
-  { id: "entertainment", label: "Entertainment" },
-  { id: "marketing", label: "Marketing" },
-  { id: "saas", label: "SaaS" },
-  { id: "copywriting", label: "Copywriting" },
-];
+import { useNavigate } from "react-router";
+import { MODELS, TAGS } from "@/constants";
 
 type PromptFormProps = {
   mode: "create" | "edit";
@@ -39,6 +24,7 @@ export function PromptForm({
   defaultValues,
   onDelete
 }: PromptFormProps) {
+  const navigate = useNavigate();
   const methods = usePromptForm();
 
   useEffect(() => {
@@ -59,6 +45,16 @@ export function PromptForm({
       methods.reset();
     }
   });
+
+  const handleOnDelete = () => {
+    if (onDelete) {
+      onDelete();
+    }
+  }
+
+  const handleOnCancel = () => {
+    navigate("/");
+  }
 
   return (
     <FormProvider {...methods}>
@@ -85,11 +81,11 @@ export function PromptForm({
                 { mode === "create" ? "Share" : "Save changes"}
               </Button>
               { mode === "edit" ? (
-                <Button onClick={onDelete} variant="contained" type="button" disabled={isLoading}>
+                <Button onClick={handleOnDelete} variant="contained" type="button" disabled={isLoading}>
                   Delete
                 </Button>
               ) : null }
-              <Button variant="outlined">Cancel</Button>
+              <Button variant="outlined" onClick={handleOnCancel}>Cancel</Button>
             </Stack>
           </Grid>
         </Grid>
