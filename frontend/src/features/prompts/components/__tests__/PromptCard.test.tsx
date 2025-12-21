@@ -13,28 +13,31 @@ const mockPrompt = {
 };
 
 describe("PromptCard", () => {
-  beforeEach(() => {
-    renderWithProviders(
-      <PromptCard prompt={mockPrompt} />
-    );
-  });
-
   afterEach(() => {
     cleanup();
   });
-  test("should render PromptCard component", () => {
+  it("render PromptCard component", () => {
+    renderWithProviders(
+      <PromptCard prompt={mockPrompt} />
+    );
     expect(screen.getByText(/Generate a marketing headline/)).toBeDefined();
     expect(screen.getByText(/gpt-4/)).toBeDefined();
     expect(screen.getByText(/johndoe/)).toBeDefined();
   });
-  test("should display all tags", () => {
+  it("display all tags", () => {
+    renderWithProviders(
+      <PromptCard prompt={mockPrompt} />
+    );
     mockPrompt.tags.forEach((tag) => {
       expect(screen.findByText(new RegExp(tag, "i"))).toBeDefined();
     });
   });
-  test("should navigate to prompt detail page on click", () => {
+  it("navigate to prompt detail page on click", () => {
+    const { router } = renderWithProviders(
+      <PromptCard prompt={mockPrompt} />
+    );
     const link = screen.getByTestId("prompt-link");
     fireEvent.click(link);
-    expect(screen.getByText("Prompt detail")).toBeDefined();
+    expect(router.state.location.pathname).toBe("/prompts/abc-123");
   });
 });

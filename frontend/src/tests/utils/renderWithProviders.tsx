@@ -73,9 +73,11 @@ export function renderWithProviders(
     }
   );
 
-  return render(
+  const renderResult = render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
   );
+  
+  return { ...renderResult, router };
 }
