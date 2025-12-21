@@ -20,8 +20,8 @@ const TAGS = [
   { id: "education", label: "Education" },
   { id: "entertainment", label: "Entertainment" },
   { id: "marketing", label: "Marketing" },
-  { id: "saas", label: "SaaS"},
-  { id: "copywriting", label: "Copywriting"}
+  { id: "saas", label: "SaaS" },
+  { id: "copywriting", label: "Copywriting" },
 ];
 
 type PromptFormProps = {
@@ -29,6 +29,7 @@ type PromptFormProps = {
   onSubmit: (data: PromptFormValues) => void;
   isLoading?: boolean;
   defaultValues?: PromptCreate;
+  onDelete?: () => void
 };
 
 export function PromptForm({
@@ -36,6 +37,7 @@ export function PromptForm({
   onSubmit,
   isLoading,
   defaultValues,
+  onDelete
 }: PromptFormProps) {
   const methods = usePromptForm();
 
@@ -80,11 +82,14 @@ export function PromptForm({
           <Grid size={12}>
             <Stack direction="row-reverse" spacing={2}>
               <Button variant="contained" type="submit" disabled={isLoading}>
-                Share
+                { mode === "create" ? "Share" : "Save changes"}
               </Button>
-              <Button variant="outlined" disabled={isLoading}>
-                Cancel
-              </Button>
+              { mode === "edit" ? (
+                <Button onClick={onDelete} variant="contained" type="button" disabled={isLoading}>
+                  Delete
+                </Button>
+              ) : null }
+              <Button variant="outlined">Cancel</Button>
             </Stack>
           </Grid>
         </Grid>
