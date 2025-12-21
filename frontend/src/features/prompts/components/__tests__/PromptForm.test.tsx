@@ -65,6 +65,20 @@ describe("PromptForm", () => {
       expect(mockOnSubmit).toHaveBeenCalled();
     });
 
+    it("display errors when fields are empty or with wrong format", async () => {
+      renderWithProviders(<PromptForm mode="create" onSubmit={mockOnSubmit} />);
+      const user = userEvent.setup();
+
+      await user.click(screen.getByRole("button", { name: /share/i }));
+      
+      expect(await screen.findByText(/title must be at least 3 characters/i)).toBeDefined();
+      expect(await screen.findByText(/Prompt must be at least 10 characters/i)).toBeDefined();
+      expect(await screen.findByText(/Result example must be at least 10 characters/i)).toBeDefined();
+      expect(await screen.findByText(/Add at least one tag/i)).toBeDefined();
+      expect(await screen.findByText(/Select a model/i)).toBeDefined();
+
+    })
+
     it("disable share button when isLoading paramther is false", async () => {
       renderWithProviders(
         <PromptForm mode="create" onSubmit={mockOnSubmit} isLoading={true} />
@@ -116,8 +130,6 @@ describe("PromptForm", () => {
       );
       const saveButton = screen.getByRole("button", { name: /save changes/i });
       expect(saveButton.hasAttribute("disabled")).toBe(true);
-
-      screen.debug();
 
       const deleteButton = screen.getByRole("button", { name: /delete/i });
       expect(deleteButton.hasAttribute("disabled")).toBe(true);
