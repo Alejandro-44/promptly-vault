@@ -1,8 +1,7 @@
 import type { PromptCreate } from "@/services";
 
 function areTagsEqual(a: string[], b: string[]) {
-  if (a.length !== b.length) return false;
-  return a.every((tag, index) => tag === b[index]);
+  return a.length === b.length && b.every(tag => a.includes(tag));
 }
 
 export function getPromptChanges(
