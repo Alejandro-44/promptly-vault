@@ -76,8 +76,16 @@ describe("PromptForm", () => {
       expect(await screen.findByText(/Result example must be at least 10 characters/i)).toBeDefined();
       expect(await screen.findByText(/Add at least one tag/i)).toBeDefined();
       expect(await screen.findByText(/Select a model/i)).toBeDefined();
-
     })
+
+    it("redirect to home page when cancel button is clicked", async () => {
+      renderWithProviders(<PromptForm mode="create" onSubmit={mockOnSubmit} />);
+      const user = userEvent.setup();
+
+      await user.click(screen.getByRole("button", { name: /cancel/i }));
+
+      expect(window.location.pathname).toBe("/");
+    });
 
     it("disable share button when isLoading paramther is false", async () => {
       renderWithProviders(
