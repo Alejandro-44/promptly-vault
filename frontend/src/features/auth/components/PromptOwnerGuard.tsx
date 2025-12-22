@@ -2,6 +2,7 @@ import { Outlet, useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { useAuth } from "../hooks";
 import { usePrompt } from "@/features/prompts/hooks/usePrompt";
+import { LoadingPage } from "@/pages/LoadingPage";
 
 export function PromptOwnerGuard() {
   const { promptId } = useParams();
@@ -23,7 +24,7 @@ export function PromptOwnerGuard() {
   }, [prompt, user, navigate]);
 
   if (isLoading) {
-    return <div>Loading prompt...</div>;
+    return <LoadingPage />;
   }
 
   if (!prompt) {
