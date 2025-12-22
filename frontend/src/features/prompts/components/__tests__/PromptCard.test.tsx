@@ -40,4 +40,12 @@ describe("PromptCard", () => {
     fireEvent.click(link);
     expect(router.state.location.pathname).toBe("/prompts/abc-123");
   });
+  it("navigate to prompt edit page when click edit button", () => {
+    const { router } = renderWithProviders(
+      <PromptCard prompt={mockPrompt} editable={true} />
+    );
+    const link = screen.getByTestId("edit-link");
+    fireEvent.click(link)
+    expect(router.state.location.pathname).toBe("/prompts/abc-123/edit");
+  })
 });
