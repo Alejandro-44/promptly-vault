@@ -35,3 +35,5 @@ export type PromptCreateResponse = {
   message: string;
   id: string;
 }
+
+export type PromptUpdate = Partial<PromptCreate>;

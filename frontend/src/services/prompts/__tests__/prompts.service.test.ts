@@ -1,7 +1,7 @@
 import { PromptsService } from "../prompts.service";
 
 describe("PromptsService", () => {
-  it("should get all prompts successfully", async () => {
+  it("get all prompts successfully", async () => {
     const prompts = await PromptsService.getAllPrompts();
     expect(prompts).toHaveLength(3);
     expect(prompts[0]).toEqual({
@@ -15,7 +15,7 @@ describe("PromptsService", () => {
     });
   });
 
-  it("should return prompt details with correct types", async () => {
+  it("return prompt details with correct types", async () => {
     const mockPromptId = "abc-123";
     const prompt = await PromptsService.getPromptDetail(mockPromptId);
 
@@ -37,7 +37,7 @@ describe("PromptsService", () => {
     });
   });
 
-  it("should resturn successful message and id when create a new prompt successfully", async () => {
+  it("returns successful message and id when create a new prompt successfully", async () => {
     const mocksPromptCreate = {
       title: "Integration test",
       prompt: "Write a poem",
@@ -50,5 +50,31 @@ describe("PromptsService", () => {
 
     expect(response).toHaveProperty("message")
     expect(response).toHaveProperty("id", "mockedid789456")
+  });
+
+  it("update a prompt successfully", async () => {
+    const mockPromptId = "abc-123";
+    const promptUpdate = {
+      title: "Updated Title",
+    };
+
+    await expect(
+      PromptsService.update(mockPromptId, promptUpdate)
+    ).resolves.toBeUndefined();
+
+    const updatedPrompt = await PromptsService.getPromptDetail(mockPromptId);
+    expect(updatedPrompt.title).toBe("Updated Title");
+  });
+
+  it("delete a prompt successfully", async () => {
+    const mockPromptId = "abc-123";
+
+    await expect(
+      PromptsService.delete(mockPromptId)
+    ).resolves.toBeUndefined();
+
+    await expect(
+      PromptsService.getPromptDetail(mockPromptId)
+    ).rejects.toThrow("Prompt not found");
   });
 });
