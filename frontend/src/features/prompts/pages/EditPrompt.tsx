@@ -2,31 +2,43 @@ import { Card, CardContent } from "@mui/material";
 import { PromptForm } from "../components/PromptForm";
 import type { PromptFormValues } from "../schemas";
 import type { Prompt, PromptCreate } from "@/services";
-import { useOutletContext } from "react-router";
+import { useOutletContext, useParams } from "react-router";
 import { getPromptChanges } from "@/utils";
+import { usePromptDelete, usePromptUpdate } from "../hooks";
 
 export function EditPrompt() {
+  const { promptId } = useParams();
   const { prompt } = useOutletContext<{ prompt: Prompt }>();
+  const { mutate: updatePrompt, isPending: isUpdatePending } = usePromptUpdate({ promptId: promptId || "" });
+  const { mutate: deletePrompt, isPending: isDeletePending } = usePromptDelete({ promptId: promptId || "" });
 
-  console.log(prompt)
-
-  const handleCreatePrompt = (data: PromptFormValues) => {
+  const handleUpdatePrompt = (data: PromptFormValues) => {
     const originalPrompt: PromptCreate = {
-    title: prompt.title,
-    prompt: prompt.prompt,
-    model: prompt.model,
-    tags: prompt.tags,
-    resultExample: prompt.resultExample,
+      title: prompt.title,
+      prompt: prompt.prompt,
+      model: prompt.model,
+      tags: prompt.tags,
+      resultExample: prompt.resultExample,
+    };
+    const changes = getPromptChanges(originalPrompt, data);
+    updatePrompt(changes);
   };
-    const changes = getPromptChanges(originalPrompt, data)
-    console.log("New prompt data:", changes)
+
+  const handleDeletePrompt = () => {
+    deletePrompt();
   }
 
   return (
-    <Card sx={{ maxWidth: 875, mx: "auto"}}>
-      <CardContent sx={{ p: 4}}>
-        <PromptForm mode="edit" onSubmit={handleCreatePrompt} defaultValues={prompt} />
+    <Card sx={{ maxWidth: 875, mx: "auto" }}>
+      <CardContent sx={{ p: 4 }}>
+        <PromptForm
+          mode="edit"
+          onSubmit={handleUpdatePrompt}
+          defaultValues={prompt}
+          isLoading={isUpdatePending || isDeletePending}
+          onDelete={handleDeletePrompt}
+        />
       </CardContent>
     </Card>
-  )
+  );
 }
