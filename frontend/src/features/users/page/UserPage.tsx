@@ -24,7 +24,7 @@ export function UserPage({ mode }: UserPageProps) {
         <Typography variant="h5" component="h2">
           {mode === "me" ? "My Prompts" : `${user?.username}'s prompts`}
         </Typography>
-        <PromptsGrid prompts={prompts} />
+        <PromptsGrid prompts={prompts} editable={mode === "me"} />
       </Container>
     </>
   );
