@@ -1,4 +1,5 @@
 from typing import Optional
+from bson.errors import InvalidId
 
 from app.schemas.user_schema import UserCreate, User
 from app.core.security import hash_password
@@ -16,7 +17,12 @@ class UserService:
         return User.from_document(user)
 
     async def get_by_id(self, user_id: str) -> User | Exception:
-        user_doc = await self.__user_repo.get_by_id(user_id)
+        user_doc = None
+        try:
+            user_doc = await self.__user_repo.get_by_id(user_id)
+        except InvalidId:
+            raise UserNotFoundError()
+        
         if not user_doc:
             raise UserNotFoundError()
 

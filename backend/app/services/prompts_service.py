@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from bson import ObjectId
+from bson.errors import InvalidId
 
 from app.repositories.prompts_repository import PromptsRepository
 from app.schemas.prompt_schema import PromptCreate, PromptUpdate, Prompt, PromptSummary
@@ -23,7 +24,12 @@ class PromptsService:
         return self.process_prompt_documents(prompt_documents)
     
     async def get_by_id(self, prompt_id: str) -> Prompt | PromptNotFoundError:
-        prompt_document = await self.__prompts_repo.get_by_id(prompt_id)
+        prompt_document = None
+        try:
+            prompt_document = await self.__prompts_repo.get_by_id(prompt_id)
+        except InvalidId:
+            raise PromptNotFoundError()
+
         if not prompt_document:
             raise PromptNotFoundError()
 
