@@ -1,8 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { renderHook } from "@testing-library/react";
+import { renderHook, type RenderHookOptions } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 
-export function renderHookWithClient(callback: () => any) {
+export function renderHookWithClient<Props, Result>(
+  callback: (props: Props) => Result,
+  options?: RenderHookOptions<Props>
+) {
+
   const client = new QueryClient({
     defaultOptions: {
       queries: {
@@ -13,6 +17,7 @@ export function renderHookWithClient(callback: () => any) {
   });
 
   return renderHook(callback, {
+    ...options,
     wrapper: ({ children }) => (
       <QueryClientProvider client={client}>
         <MemoryRouter>{children}</MemoryRouter>
