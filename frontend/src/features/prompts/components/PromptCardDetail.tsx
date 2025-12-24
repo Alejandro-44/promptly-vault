@@ -13,13 +13,16 @@ import { usePrompt } from "../hooks";
 import { PromptTags } from "./PromptTags";
 import { CopyIcon } from "lucide-react";
 import { Link } from "react-router";
+import { useRedirectOn } from "@/features/auth/hooks";
 
 type Props = {
   promptId: string;
 };
 
 export function PromptCardDetail({ promptId }: Props) {
-  const { data: prompt } = usePrompt({ promptId });
+  const { data: prompt, error } = usePrompt({ promptId });
+  useRedirectOn({ when: error?.status === 404, to: "/404" });
+
   return (
     <Card component="article" sx={{ maxWidth: "md", mx: "auto" }}>
       <CardContent sx={{ p: 3 }}>
