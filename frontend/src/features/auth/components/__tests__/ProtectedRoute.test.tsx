@@ -4,7 +4,7 @@ import { waitFor } from "@testing-library/react";
 import { renderWithProviders } from "@/tests/utils/renderWithProviders";
 
 describe("ProtectedRoute", () => {
-  test("redirects to login if user is not authenticated", async () => {
+  test("redirects to 403 if user is not authenticated", async () => {
     useUserStore.setState({
       user: null,
       isAuthenticated: false,
@@ -14,7 +14,7 @@ describe("ProtectedRoute", () => {
     renderWithProviders(null, ["/private"]);
 
     await waitFor(() => {
-      expect(screen.getByText("Home")).toBeDefined();
+      expect(screen.getByText("403")).toBeDefined();
     });
   });
 

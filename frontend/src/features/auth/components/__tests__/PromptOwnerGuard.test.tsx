@@ -2,6 +2,7 @@ import { cleanup, screen, waitFor } from "@testing-library/react";
 import { useUserStore } from "@/features/users/contexts";
 import { renderWithProviders } from "@/tests/utils/renderWithProviders";
 
+
 describe("PromptOwnerGuard", () => {
   beforeEach(() => {
     useUserStore.setState({
@@ -11,7 +12,7 @@ describe("PromptOwnerGuard", () => {
     });
   });
 
-  afterEach(cleanup)
+  afterEach(cleanup);
 
   test("shows loading while fetching prompt", () => {
     useUserStore.setState({
@@ -21,10 +22,10 @@ describe("PromptOwnerGuard", () => {
     });
 
     renderWithProviders(null, ["/prompts/abc-123/edit"]);
-    expect(screen.getByText("Loading prompt...")).toBeDefined();
+    expect(screen.getByRole("progressbar")).toBeDefined();
   });
 
-  test("navigates to home on error", async () => {
+  test("navigates to home 404 when doesn't find the prompt", async () => {
     useUserStore.setState({
       user: { id: "123-abc", username: "johndoe" } as any,
       isAuthenticated: true,
@@ -32,11 +33,11 @@ describe("PromptOwnerGuard", () => {
     });
     renderWithProviders(null, ["/prompts/invalid-id/edit"]);
     await waitFor(() => {
-      expect(screen.getByText("Home")).toBeDefined();
+      expect(screen.getByText("404")).toBeDefined();
     });
   });
 
-  test("navigates to home if user is not the owner", async () => {
+  test("navigates to 403 if user is not the owner", async () => {
     useUserStore.setState({
       user: { id: "456-def", username: "alex" } as any,
       isAuthenticated: true,
@@ -46,7 +47,7 @@ describe("PromptOwnerGuard", () => {
     renderWithProviders(null, ["/prompts/abc-123/edit"]);
 
     await waitFor(() => {
-      expect(screen.getByText("Home")).toBeDefined();
+      expect(screen.getByText("403")).toBeDefined();
     });
   });
 

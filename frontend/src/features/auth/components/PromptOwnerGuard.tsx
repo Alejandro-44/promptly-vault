@@ -1,34 +1,23 @@
-import { Outlet, useNavigate, useParams } from "react-router";
-import { useEffect } from "react";
-import { useAuth } from "../hooks";
+import { Outlet, useParams } from "react-router";
+import { useAuth, useRedirectOn } from "../hooks";
 import { usePrompt } from "@/features/prompts/hooks/usePrompt";
 import { LoadingPage } from "@/pages/LoadingPage";
 
 export function PromptOwnerGuard() {
-  const { promptId } = useParams();
-  const id = promptId || "";
-  const navigate = useNavigate();
+  const params = useParams();
+  const promptId = params.promptId || "";
   const { user } = useAuth();
-  const { data: prompt, isLoading, error } = usePrompt({ promptId: id });
+  const {
+    data: prompt,
+    isLoading: isLoadingPrompt,
+    error: promptError,
+  } = usePrompt({ promptId });
+  
+  useRedirectOn({when: promptError?.status === 404, to: "/404"});
+  useRedirectOn({when: prompt! && prompt.author.id !== user!.id, to: "/403"});
 
-  useEffect(() => {
-    if (error) {
-      navigate("/");
-    }
-  }, [error, navigate]);
-
-  useEffect(() => {
-    if (prompt && prompt.author.id !== user!.id) {
-      navigate("/");
-    }
-  }, [prompt, user, navigate]);
-
-  if (isLoading) {
+  if (isLoadingPrompt) {
     return <LoadingPage />;
-  }
-
-  if (!prompt) {
-    return null;
   }
 
   return <Outlet context={{ prompt }} />;

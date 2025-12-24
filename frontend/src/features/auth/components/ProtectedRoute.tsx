@@ -1,16 +1,13 @@
-import { Navigate, Outlet } from "react-router";
-import { useUserStore } from "@/features/users/contexts";
+import { Outlet } from "react-router";
 import { LoadingPage } from "@/pages/LoadingPage";
+import { useAuth, useRedirectOn } from "../hooks";
 
 export function ProtectedRoute() {
-  const { isAuthenticated, isLoading } = useUserStore();
+  const { isAuthenticated, isLoading } = useAuth();
+  useRedirectOn({when: !isAuthenticated && !isLoading, to: "/403"})
 
   if (isLoading) {
     return <LoadingPage />;
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to={"/"} />;
   }
 
   return <Outlet />;
