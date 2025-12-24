@@ -1,10 +1,11 @@
 from datetime import datetime
 
 from bson import ObjectId
+from bson.errors import InvalidId
 
 from app.schemas.comment_schema import CommentCreate, CommentUpdate, Comment
 from app.repositories.comments_repository import CommentsRepository
-from app.core.exceptions import CommentNotFoundError
+from app.core.exceptions import CommentNotFoundError, PromptNotFoundError
 
 class CommentsService:
     
@@ -12,7 +13,11 @@ class CommentsService:
         self.__comments_repo = comments_repo
 
     async def get_prompt_comments(self, prompt_id: str) -> list[Comment]:
-        comment_documents = await self.__comments_repo.get_by_prompt(prompt_id)
+        comment_documents = None
+        try:
+            comment_documents = await self.__comments_repo.get_by_prompt(prompt_id)
+        except InvalidId:
+            raise PromptNotFoundError()
         return [Comment.from_document(document) for document in comment_documents]
 
     async def create(self, prompt_id: str, user_id: str, comment_in: CommentCreate) -> str:

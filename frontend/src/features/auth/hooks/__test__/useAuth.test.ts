@@ -1,6 +1,6 @@
 import { useUserStore } from "@/features/users/contexts";
 import { renderHookWithClient } from "@/tests/utils/renderHookWithClient";
-import { useLogin, useLogout, useMe, useRegister } from "../useAuth";
+import { useAuth, useLogin, useLogout, useMe, useRegister } from "../useAuth";
 import { act, waitFor } from "@testing-library/react";
 
 const navigateMock = vi.fn();
@@ -85,4 +85,17 @@ describe("useAuth", () => {
       expect(navigateMock).toHaveBeenCalledWith("/");
     });
   });
+
+  describe("useAuth", () => {
+    it("should return true when there is an authenticaed user", () => {
+      useUserStore.setState({
+        user: { id: "1", username: "johndoe" } as any,
+        isAuthenticated: true,
+      });
+
+      const { result } = renderHookWithClient(useAuth);
+
+      expect(result.current.isAuthenticated).toBe(true)
+    })
+  })
 });

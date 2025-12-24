@@ -30,3 +30,5 @@ export type PromptCreateDTO = {
   model: string;
   tags: string[];
 }
+
+export type PromptUpdateDTO = Partial<PromptCreateDTO>;

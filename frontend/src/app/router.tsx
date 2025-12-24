@@ -7,6 +7,10 @@ import { HomePage } from "@/features/home/pages/HomePage";
 import { PromptDetail } from "@/features/prompts/pages/PromptDetail";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 import { CreatePrompt } from "@/features/prompts/pages/CreatePrompt";
+import { PromptOwnerGuard } from "@/features/auth/components/PromptOwnerGuard";
+import { EditPrompt } from "@/features/prompts/pages/EditPrompt";
+import { NotFoundPage } from "@/pages/NotFoundPage";
+import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
 
 export const router = createBrowserRouter([
   {
@@ -56,11 +60,37 @@ export const router = createBrowserRouter([
               {
                 path: "new",
                 Component: CreatePrompt,
-              }
-            ]
-          }
+              },
+            ],
+          },
+          {
+            Component: ProtectedRoute,
+            children: [
+              {
+                Component: PromptOwnerGuard,
+                children: [
+                  {
+                    path: ":promptId/edit",
+                    Component: EditPrompt,
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
+      {
+        path: "404",
+        Component: NotFoundPage,
+      },
+      {
+        path: "403",
+        Component: UnauthorizedPage,
+      },
     ],
+  },
+  {
+    path: "*",
+    Component: NotFoundPage,
   },
 ]);

@@ -16,9 +16,8 @@ const LoginForm = () => {
     methods.reset();
   });
 
-  const errorMessage =
-    (error as any)?.response?.data?.detail || "Error inesperado";
-
+  const errorMessage = error?.message
+  
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit}>

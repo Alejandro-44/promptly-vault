@@ -75,8 +75,13 @@ async def delete_prompt(prompt_id: str, user: UserDependency, services: Services
 
 @router.get("/{prompt_id}/comments", response_model=list[Comment], status_code=status.HTTP_200_OK)
 async def get_comments(prompt_id: str, services: ServicesDependency):
-    return await services.comments.get_prompt_comments(prompt_id)
-
+    try:
+        return await services.comments.get_prompt_comments(prompt_id)
+    except PromptNotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Prompt not found"
+        )
 
 @router.post("/{prompt_id}/comments", status_code=status.HTTP_201_CREATED)
 async def create_comment(

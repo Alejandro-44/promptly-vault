@@ -7,5 +7,13 @@ export function usePromptForm() {
     resolver: zodResolver(promptSchema),
     criteriaMode: "all",
     mode: "all",
+    defaultValues: {
+      title: "",
+      prompt: "",
+      model: "",
+      tags: [],
+      resultExample: "",
+    },
   });
 }
+

@@ -1,7 +1,6 @@
 import { UsersService } from "@/services";
 import { useQuery } from "@tanstack/react-query";
-import { useUserStore } from "../contexts";
-
+import { useAuth } from "@/features/auth/hooks";
 
 type UseUserParams = {
   mode: "me" | "public";
@@ -9,15 +8,25 @@ type UseUserParams = {
 };
 
 export function useUser({ mode, userId }: UseUserParams) {
-  const authUser = useUserStore((state) => state.user);
+  const { user: authUser, isLoading: authLoading } = useAuth();
 
-  const { data: publicUser } = useQuery({
+  const {
+    data: publicUser,
+    isLoading: publicLoading,
+    error: publicError,
+  } = useQuery({
     queryKey: ["user", userId],
     queryFn: () => UsersService.getUserById(userId!),
     enabled: mode === "public" && !!userId,
   });
 
+  const isLoading = mode === "me" ? authLoading : publicLoading;
+  const error = mode === "me" ? null : publicError;
+  const user = mode === "me" ? authUser : publicUser;
+
   return {
-    user: mode === "me" ? authUser : publicUser,
+    user,
+    isLoading,
+    error,
   };
 }

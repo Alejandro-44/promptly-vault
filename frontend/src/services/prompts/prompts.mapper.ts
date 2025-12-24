@@ -40,3 +40,24 @@ export const promptCreateMapper = {
   }),
 }
 
+export const promptUpdateMapper = {
+  toPartialPromptCreateDTO: (model: Partial<PromptCreate>): Partial<PromptCreateDTO> => {
+    const dto: Partial<PromptCreateDTO> = {};
+    if (model.title !== undefined) {
+      dto.title = model.title;
+    }
+    if (model.prompt !== undefined) {
+      dto.prompt = model.prompt;
+    }
+    if (model.resultExample !== undefined) {
+      dto.result_example = model.resultExample;
+    }
+    if (model.model !== undefined) {
+      dto.model = model.model;
+    }
+    if (model.tags !== undefined) {
+      dto.tags = model.tags;
+    }
+    return dto;
+  },
+}

@@ -1,7 +1,7 @@
 import { httpClient } from "../api/httpClient";
 import type { PromptDTO, PromptSummaryDTO } from "./prompts.dto";
 import type { Prompt, PromptCreate, PromptCreateResponse, PromptSummary } from "./prompts.model";
-import { promptCreateMapper, promptMapper, promptSummaryMapper } from "./prompts.mapper";
+import { promptCreateMapper, promptMapper, promptSummaryMapper, promptUpdateMapper } from "./prompts.mapper";
 
 export class PromptsService {
   static async getAllPrompts(): Promise<PromptSummary[]> {
@@ -21,5 +21,14 @@ export class PromptsService {
       id: data.id,
       message: data.message,
     }
+  }
+
+  static async update(id: string, prompt: Partial<PromptCreate>) {
+    const promptDTO = promptUpdateMapper.toPartialPromptCreateDTO(prompt);
+    await httpClient.patch(`/prompts/${id}`, promptDTO);
+  }
+
+  static async delete(id: string) {
+    await httpClient.delete(`/prompts/${id}`);
   }
 }

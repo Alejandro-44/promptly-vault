@@ -25,7 +25,7 @@ describe("Login Form", () => {
     fireEvent.click(screen.getByRole("button", { name: /Log In/i }));
 
     expect(await screen.findByText(/The email is required/i)).toBeDefined();
-    expect(screen.getByText(/The password is required/i)).toBeDefined();
+    expect(await screen.findByText(/The password is required/i)).toBeDefined();
 
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: "no-email" },
