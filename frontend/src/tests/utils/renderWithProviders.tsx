@@ -67,6 +67,14 @@ export function renderWithProviders(
           },
         ],
       },
+      {
+        path: "404",
+        element: <div>404</div>,
+      },
+      {
+        path: "403",
+        element: <div>403</div>,
+      },
     ],
     {
       initialEntries,
@@ -78,6 +86,6 @@ export function renderWithProviders(
       <RouterProvider router={router} />
     </QueryClientProvider>
   );
-  
+
   return { ...renderResult, router };
 }

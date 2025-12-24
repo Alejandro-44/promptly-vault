@@ -9,6 +9,8 @@ import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 import { CreatePrompt } from "@/features/prompts/pages/CreatePrompt";
 import { PromptOwnerGuard } from "@/features/auth/components/PromptOwnerGuard";
 import { EditPrompt } from "@/features/prompts/pages/EditPrompt";
+import { NotFoundPage } from "@/pages/NotFoundPage";
+import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
 
 export const router = createBrowserRouter([
   {
@@ -77,6 +79,18 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "404",
+        Component: NotFoundPage,
+      },
+      {
+        path: "403",
+        Component: UnauthorizedPage,
+      },
     ],
+  },
+  {
+    path: "*",
+    Component: NotFoundPage,
   },
 ]);
