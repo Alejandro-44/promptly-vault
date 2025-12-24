@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { PromptTags } from "./PromptTags";
 import { Pencil, Sparkles } from "lucide-react";
 
@@ -19,14 +19,36 @@ type Props = {
 };
 
 export function PromptCard({ prompt, editable = false }: Props) {
+  const navigate = useNavigate();
   return (
     <Card
       sx={{
+        position: "relative",
         height: "100%",
         transition: "all 0.2s ease-in-out",
+        "&:hover .edit-button": { opacity: 1 },
       }}
       data-testid="prompt-card"
     >
+      {editable && (
+        <Tooltip title="Edit">
+          <IconButton
+            className="edit-button"
+            sx={{
+              position: "absolute",
+              right: 4,
+              top: 4,
+              zIndex: 10,
+              opacity: 0,
+              backgroundColor: "#DFDFDF",
+            }}
+            data-testid="edit-button"
+            onClick={() => navigate(`/prompts/${prompt.id}/edit`)}
+          >
+            <Pencil fill="inherit" stroke="1px" />
+          </IconButton>
+        </Tooltip>
+      )}
       <CardActionArea
         sx={{ height: "inherit", mb: 2 }}
         component={Link}
@@ -34,32 +56,10 @@ export function PromptCard({ prompt, editable = false }: Props) {
         data-testid="prompt-link"
       >
         <CardContent
-          sx={{ 
-            height: "100%", 
-            "&:hover .edit-button": 
-            { opacity: 1 } 
+          sx={{
+            height: "100%",
           }}
         >
-          {editable && (
-            <Tooltip title="Edit">
-              <IconButton
-                className="edit-button"
-                sx={{
-                  position: "absolute",
-                  right: 4,
-                  top: 4,
-                  zIndex: 10,
-                  opacity: 0,
-                  backgroundColor: "#DFDFDF",
-                }}
-                component={Link}
-                to={`/prompts/${prompt.id}/edit`}
-                data-testid="edit-link"
-              >
-                <Pencil fill="inherit" stroke="1px" />
-              </IconButton>
-            </Tooltip>
-          )}
           <Grid
             sx={{ height: "inherit" }}
             container

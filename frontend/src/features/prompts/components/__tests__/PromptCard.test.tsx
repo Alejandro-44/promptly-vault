@@ -44,7 +44,7 @@ describe("PromptCard", () => {
     const { router } = renderWithProviders(
       <PromptCard prompt={mockPrompt} editable={true} />
     );
-    const link = screen.getByTestId("edit-link");
+    const link = screen.getByTestId("edit-button");
     fireEvent.click(link)
     expect(router.state.location.pathname).toBe("/prompts/abc-123/edit");
   })
