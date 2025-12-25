@@ -32,3 +32,11 @@ export type PromptCreateDTO = {
 }
 
 export type PromptUpdateDTO = Partial<PromptCreateDTO>;
+
+export type PromptCommentDTO = {
+  id: string;
+  content: string;
+  prompt_id: string;
+  author: string;
+  pub_date: Date;
+}
