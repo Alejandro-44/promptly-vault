@@ -77,4 +77,16 @@ describe("PromptsService", () => {
       PromptsService.getPromptDetail(mockPromptId)
     ).rejects.toThrow("Prompt not found");
   });
+
+  it("get prompt comments successfully", async () => {
+    const mockPromptId = "abc-123";
+
+    const comments = await PromptsService.getPromptComments(mockPromptId);
+    const mockAuthors = ["alex", "matt", "jane"]
+
+    expect(comments).toHaveLength(3)
+    for (const comment of comments) {
+      expect(mockAuthors.some((author) => author === comment.author)).toBeTruthy()
+    }
+  })
 });

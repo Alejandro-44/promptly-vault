@@ -1,7 +1,7 @@
 import { httpClient } from "../api/httpClient";
-import type { PromptDTO, PromptSummaryDTO } from "./prompts.dto";
+import type { PromptCommentDTO, PromptDTO, PromptSummaryDTO } from "./prompts.dto";
 import type { Prompt, PromptCreate, PromptCreateResponse, PromptSummary } from "./prompts.model";
-import { promptCreateMapper, promptMapper, promptSummaryMapper, promptUpdateMapper } from "./prompts.mapper";
+import { promptCommentMapper, promptCreateMapper, promptMapper, promptSummaryMapper, promptUpdateMapper } from "./prompts.mapper";
 
 export class PromptsService {
   static async getAllPrompts(): Promise<PromptSummary[]> {
@@ -30,5 +30,10 @@ export class PromptsService {
 
   static async delete(id: string) {
     await httpClient.delete(`/prompts/${id}`);
+  }
+
+  static async getPromptComments(id: string) {
+    const data = await httpClient.get<PromptCommentDTO[]>(`/prompts/${id}/comments`);
+    return data.map(promptCommentMapper.toPromptComment)
   }
 }
