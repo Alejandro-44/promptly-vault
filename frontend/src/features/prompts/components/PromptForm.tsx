@@ -5,7 +5,6 @@ import { usePromptForm } from "../hooks/usePromptForm";
 import type { PromptFormValues } from "../schemas";
 import { RHFAutocomplete } from "@/components/RHFAutocomplete";
 import type { PromptCreate } from "@/services";
-import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { MODELS, TAGS } from "@/constants";
 
@@ -25,20 +24,7 @@ export function PromptForm({
   onDelete
 }: PromptFormProps) {
   const navigate = useNavigate();
-  const methods = usePromptForm();
-
-  useEffect(() => {
-    if (mode === "edit" && defaultValues) {
-      methods.reset({
-        title: defaultValues.title,
-        prompt: defaultValues.prompt,
-        model: defaultValues.model,
-        tags: defaultValues.tags,
-        resultExample: defaultValues.resultExample,
-      });
-    }
-  }, [mode, defaultValues, methods]);
-
+  const methods = usePromptForm({ defaultValues });
   const handleSubmit = methods.handleSubmit((data) => {
     onSubmit(data);
     if (mode === "create") {
