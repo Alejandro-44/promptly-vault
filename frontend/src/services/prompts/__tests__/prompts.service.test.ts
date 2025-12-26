@@ -48,8 +48,8 @@ describe("PromptsService", () => {
 
     const response = await PromptsService.create(mocksPromptCreate);
 
-    expect(response).toHaveProperty("message")
-    expect(response).toHaveProperty("id", "mockedid789456")
+    expect(response).toHaveProperty("message");
+    expect(response).toHaveProperty("id", "mockedid789456");
   });
 
   it("update a prompt successfully", async () => {
@@ -67,26 +67,36 @@ describe("PromptsService", () => {
   });
 
   it("delete a prompt successfully", async () => {
-    const mockPromptId = "abc-123";
+    const mockPromptId = "ghi-789";
 
-    await expect(
-      PromptsService.delete(mockPromptId)
-    ).resolves.toBeUndefined();
+    await expect(PromptsService.delete(mockPromptId)).resolves.toBeUndefined();
 
-    await expect(
-      PromptsService.getPromptDetail(mockPromptId)
-    ).rejects.toThrow("Prompt not found");
+    await expect(PromptsService.getPromptDetail(mockPromptId)).rejects.toThrow(
+      "Prompt not found"
+    );
   });
 
   it("get prompt comments successfully", async () => {
     const mockPromptId = "abc-123";
 
     const comments = await PromptsService.getPromptComments(mockPromptId);
-    const mockAuthors = ["alex", "matt", "jane"]
+    const mockAuthors = ["alex", "matt", "jane"];
 
-    expect(comments).toHaveLength(3)
-    for (const comment of comments) {
-      expect(mockAuthors.some((author) => author === comment.author)).toBeTruthy()
-    }
-  })
+    expect(comments).toHaveLength(3);
+    comments.forEach((comment) => {
+      expect(mockAuthors).toContain(comment.author);
+    });
+  });
+
+  it("create comments successfully", async () => {
+    const mockPromptId = "def-456";
+    const mockComment = { content: "Hey, that was helpful" };
+    await PromptsService.createComment(
+      mockPromptId,
+      mockComment
+    );
+
+    const comments = await PromptsService.getPromptComments(mockPromptId);
+    expect(comments).toHaveLength(1);
+  });
 });

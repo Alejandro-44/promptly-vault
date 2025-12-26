@@ -1,6 +1,6 @@
 import { delay, http, HttpResponse } from "msw";
 import { comments, promptMocks, promptSummaryMocks } from "../data/mocks";
-import type { PromptCreateDTO } from "@/services/prompts/prompts.dto";
+import type { PromptCommentCreateDTO, PromptCreateDTO } from "@/services/prompts/prompts.dto";
 
 export const promptsHandlers = [
   http.get("http://127.0.0.1:8000/prompts/", async () => {
@@ -94,8 +94,33 @@ export const promptsHandlers = [
           { status: 404 }
         );
       }
-      const promptComments = comments.filter((comment) => comment.prompt_id === params.id);
-      return HttpResponse.json(promptComments)
+      const promptComments = comments.filter(
+        (comment) => comment.prompt_id === params.id
+      );
+      return HttpResponse.json(promptComments);
+    }
+  ),
+  http.post<{ id: string }, PromptCommentCreateDTO>(
+    "http://127.0.0.1:8000/prompts/:id/comments",
+    async ({ params, request }) => {
+      const promptExists = promptMocks.some(
+        (prompt) => prompt.id === params.id
+      );
+      if (!promptExists) {
+        return HttpResponse.json(
+          { message: "Prompt not found" },
+          { status: 404 }
+        );
+      }
+      const body = await request.json();
+      comments.push({
+        id: "jkl-101112",
+        author: "johndoe",
+        prompt_id: params.id,
+        content: body.content,
+        pub_date: Date()
+      });
+      return HttpResponse.json({}, { status: 201 });
     }
   ),
 ];

@@ -1,7 +1,23 @@
 import { httpClient } from "../api/httpClient";
-import type { PromptCommentDTO, PromptDTO, PromptSummaryDTO } from "./prompts.dto";
-import type { Prompt, PromptCreate, PromptCreateResponse, PromptSummary } from "./prompts.model";
-import { promptCommentMapper, promptCreateMapper, promptMapper, promptSummaryMapper, promptUpdateMapper } from "./prompts.mapper";
+import type {
+  PromptCommentDTO,
+  PromptDTO,
+  PromptSummaryDTO,
+} from "./prompts.dto";
+import type {
+  Prompt,
+  PromptCommentCreate,
+  PromptCreate,
+  PromptCreateResponse,
+  PromptSummary,
+} from "./prompts.model";
+import {
+  promptCommentMapper,
+  promptCreateMapper,
+  promptMapper,
+  promptSummaryMapper,
+  promptUpdateMapper,
+} from "./prompts.mapper";
 
 export class PromptsService {
   static async getAllPrompts(): Promise<PromptSummary[]> {
@@ -16,11 +32,14 @@ export class PromptsService {
 
   static async create(prompt: PromptCreate) {
     const promptDTO = promptCreateMapper.toPromptCreateDTO(prompt);
-    const data = await httpClient.post<PromptCreateResponse>('/prompts/', promptDTO);
+    const data = await httpClient.post<PromptCreateResponse>(
+      "/prompts/",
+      promptDTO
+    );
     return {
       id: data.id,
       message: data.message,
-    }
+    };
   }
 
   static async update(id: string, prompt: Partial<PromptCreate>) {
@@ -33,7 +52,16 @@ export class PromptsService {
   }
 
   static async getPromptComments(id: string) {
-    const data = await httpClient.get<PromptCommentDTO[]>(`/prompts/${id}/comments`);
-    return data.map(promptCommentMapper.toPromptComment)
+    const data = await httpClient.get<PromptCommentDTO[]>(
+      `/prompts/${id}/comments`
+    );
+    return data.map(promptCommentMapper.toPromptComment);
+  }
+
+  static async createComment(id: string, comment: PromptCommentCreate) {
+    await httpClient.post(
+      `/prompts/${id}/comments`,
+      comment
+    );
   }
 }

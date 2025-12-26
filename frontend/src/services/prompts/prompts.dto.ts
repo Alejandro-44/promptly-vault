@@ -40,3 +40,7 @@ export type PromptCommentDTO = {
   author: string;
   pub_date: Date;
 }
+
+export type PromptCommentCreateDTO = {
+  content: string;
+}

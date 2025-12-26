@@ -45,3 +45,7 @@ export type PromptComment = {
   author: string;
   pubDate: Date;
 }
+
+export type PromptCommentCreate = {
+  content: string;
+}
