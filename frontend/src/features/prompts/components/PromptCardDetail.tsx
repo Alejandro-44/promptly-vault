@@ -1,10 +1,8 @@
 import {
   Avatar,
-  Box,
   Button,
   Card,
   CardContent,
-  CardHeader,
   Divider,
   Grid,
   Paper,
