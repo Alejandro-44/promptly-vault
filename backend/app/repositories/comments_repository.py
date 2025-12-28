@@ -23,7 +23,7 @@ class CommentsRepository:
                     "as": "user"
                 }
             },
-            { "$unwind": "$user" },  # Corrected field name
+            { "$unwind": "$user" },
             {
                 "$project": {
                     "_id": 1,
@@ -32,6 +32,11 @@ class CommentsRepository:
                     "pub_date": 1,
                     "user_id": 1,
                     "author": "$user.username" 
+                }
+            },
+            {
+                "$sort": {
+                    "pub_date": -1
                 }
             }
         ]
