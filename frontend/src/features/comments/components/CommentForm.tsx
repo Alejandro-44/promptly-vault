@@ -19,7 +19,10 @@ export function CommentForm({ user, onSubmit }: CommentFormProps) {
     resolver: zodResolver(commentSchema),
   });
 
-  const handleSubmit = methods.handleSubmit(onSubmit);
+  const handleSubmit = methods.handleSubmit((data) => {
+    onSubmit(data);
+    methods.reset();
+  });
 
   return (
     <FormProvider {...methods}>
